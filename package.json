@@ -1,0 +1,27 @@
+{
+  "name": "wizard",
+  "bin": {
+    "wizard": "./dist/index.js"
+  },
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "link-cli": "(npm unlink wizard || true)  && chmod +x ./dist/index.js && npm link",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "inquirer": "^9.2.11",
+    "pluralize": "^8.0.0"
+  }
+}
