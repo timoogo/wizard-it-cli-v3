@@ -2,7 +2,7 @@ import { ColumnDetails } from "./Column.details.interface.js";
 
 export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
     id: {
-      name: "id",
+      field: "id",
       type: "number",
       length: "",
       isPrimary: true,
@@ -12,7 +12,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     createdAt: {
-      name: "createdAt",
+      field: "createdAt",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -22,7 +22,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     updatedAt: {
-      name: "updatedAt",
+      field: "updatedAt",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -32,7 +32,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     deletedAt: {
-      name: "deletedAt",
+      field: "deletedAt",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -41,8 +41,8 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       isUnique: false,
       nullable: true,
     },
-    name: {
-      name: "name",
+    field: {
+      field: "field",
       type: "varchar",
       length: "255",
       isPrimary: false,
@@ -52,7 +52,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
       email: {
-          name: "email",
+          field: "email",
           type: "varchar",
           length: "255",
           isPrimary: false,
@@ -62,7 +62,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
           nullable: false,
       },
       password: {
-          name: "password",
+          field: "password",
           type: "varchar",
           length: "255",
           isPrimary: false,

@@ -136,3 +136,95 @@ __Wizard-it__ c'est une CLI qui permet de créer et gérer un backoffice en Next
   
     - Si l'user refuse, on affiche un message d'erreur et on quitte la commande
   
+
+
+  ##
+      A terme, je souhaite avoir une commande du genre wizard generate panel
+    ça liste la liste des schemas
+    on sélectionne celui qu'on veut
+    et dans notre projet nextjs, dans :
+    - src/page/:  il crée le dossier du nom de l'entitté avec les différents fichiers
+    - src/api/  : il crée les endpoints de l'entité
+
+    ## Exemple
+    1. On génère une entité client
+    ```bash
+    wizard generate 
+    ```
+    ```bash
+    $ wizard generate 
+    # ...
+    ? What is the entity name? client
+    ? What is the column name? id
+    ? What is the column type? number
+    ? Is it a primary key? yes
+    ? Is it a generated column? yes
+    ? Is it a unique column? yes
+    ? Is it a nullable column? no
+    ? Do you want to add more columns? yes
+    ? What is the column name? name
+    ? What is the column type? string
+    ? Is it a primary key? no
+    ? Is it a generated column? no
+    ? Is it a unique column? yes
+    ? Is it a nullable column? no
+    ? Do you want to add more columns? no
+    ? Do you want to save the entity to a JSON file? yes
+    Entity generated: dist/.wizgen/entity.definition.json
+
+    ```
+    2. On génère un panel # TODO
+
+    ```bash
+    wizard generate panel
+    ```
+    ```bash
+    > For which entity do you want to generate a panel? 
+    > client # On sélectionne l'entité client  
+    > product
+
+    > Are you sure you want to generate a panel for client? 
+    > yes # On confirme la génération du panel pour l'entité client
+    > no
+
+    > What is the name of the panel? (client) # On peut modifier le nom du panel
+    > clientPanel # Si on ne modifie pas le nom, le nom par défaut est client (le nom entre parenthèse)
+
+    # il faut une commande en buller point pour sélectionner les différents types de panel
+    > The panel has by default these pages, tick the ones you want to generate: 
+    > list
+    > create
+    > update
+    > delete
+    > details
+    > all # <-- On sélectionne cette option
+
+
+    > What is the entry point of the panel? (/client) # On peut modifier le nom de l'entrée du panel
+    > /client # On accepte le nom par défaut
+    Summary:
+    - Entity: client
+    - Panel name: client
+    - Panel entry point: /client
+
+    > Do you want to modify something? (yes) # On peut modifier les informations du panel
+    > yes
+    > no #  <-- On sélectionne cette option 
+
+    ```
+    Dans le dossier `src/` on génère le dossier client/ avec les fichiers suivants :
+
+    - `pages/client/index.tsx`: la page tabulaire qui liste les clients
+    - `pages/client/create.tsx`: la page de création d'un client
+    - `pages/client/update/[id].tsx`: la page de mise à jour d'un client
+    - `pages/client/delete/[id].tsx`: la page de suppression d'un client
+    - `pages/client/[id].tsx`: la page de détails d'un client
+
+    Dans le dossier `src/api/` on génère :
+
+    - le dossier `client/` qui contient les endpoints suivants :
+    - `client/route.ts`: les routes de l'entité client 
+
+    Dans le dossier `src/constants/` on append :
+    - `api.routes.constants.ts`: la route vers le endpoint d'entré l'entité client 
+    - "export const CLIENT_API_ROUTE = '`http://localhost:${PORT}/api/client`;"

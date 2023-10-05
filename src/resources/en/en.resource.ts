@@ -97,6 +97,18 @@
       default: "English",
       choices: ["English", "Français"]  // Example of language choices
     },
+    SCHEMA_FORMAT: {
+      message: "In which format do you want to save the schema?",
+      type: "list",
+      default: "JSON",
+      choices: ["JSON", "Zod"]  // Add the formats you want
+    },
+    SAVE_TO_ZOD: {
+      message: "Do you want to save the schema to a Zod file?",
+      type: "list",
+      choices: ["yes", "no"],
+    },
+
     SAVE_TO_JSON: {
       message: "Do you want to save the entity to a JSON file?",
       type: "list",
