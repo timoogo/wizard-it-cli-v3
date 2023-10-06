@@ -1,6 +1,6 @@
   import { Questions } from "../../utils/Questions.type.js";
-
-
+  import { listEntities } from "../../utils/entity.utils.js";
+  import { CRUD, ALL } from "../constants/crud.constant.js";
   export const QUESTIONS: Questions = {
     DATABASE_NAME: {
       message: "What is the database name?",
@@ -113,6 +113,28 @@
       message: "Do you want to save the entity to a JSON file?",
       type: "list",
       choices: ["yes", "no"],
+    },
+    SELECT_ENTITY: {
+      message: "Which entity do you want to generate?",
+      type: "list",
+      default: "test",
+      choices: listEntities()
+    },
+    PANEL_NAME: {
+      message: "What is the panel name?",
+      type: "input",
+      default: "test"
+    },
+    ENTRY_POINT: {
+      message: "What is the entry point?",
+      type: "input",
+      default: "/test"
+    },
+    PAGES_TO_GENERATE: {
+      message: "Which pages do you want to generate?",
+      type: "checkbox",
+      choices: [...CRUD],
+      default: 5
     },
     DEFAULT_VALUE: {
       message: "What is the default value?",

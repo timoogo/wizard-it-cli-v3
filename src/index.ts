@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { init } from './commands/init.cli.js';
+
 import path from 'path';
 import fs from 'fs';
-import { Prompter } from './utils/Prompter.js';
-import { generate } from './commands/generate.cli.js';
+import { Prompter } from './utils/prompter.utils.js';
+import { generateEntity, generatePanel } from './commands/generate.cli.js';
+import { init } from './commands/init.cli.js';
+
+
+
 const program = new Command();
 
 // Check if .wizgen exists
@@ -19,10 +23,22 @@ if (!fs.existsSync(wizgenPath)) {
 // If you want to use the Prompter class for interactive questions
 
 // For demonstration, you can ask a question like this:
-program
+// Commande principale `generate`
+const generate = program
     .command('generate')
+    .description('Generate command with subcommands');
+
+// Sous-commande `entity` pour la commande `generate`
+generate
+    .command('entity')
     .description('Generate an entity')
-    .option('--append', 'Append to existing entity definition file')    
-    .action((cmd) => generate(cmd))
+    .action(generateEntity);
+
+// Sous-commande `panel` pour la commande `generate`
+generate
+    .command('panel')
+    .description('Generate a panel for a specific entity in a Next.js application')
+    .action(generatePanel);
+
 
 program.parse(process.argv);

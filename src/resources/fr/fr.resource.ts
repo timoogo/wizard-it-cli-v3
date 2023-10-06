@@ -1,4 +1,5 @@
 import { Questions } from "../../utils/Questions.type.js";
+import { listEntities } from "../../utils/entity.utils.js";
 
 
 export const QUESTIONS: Questions = {
@@ -90,12 +91,52 @@ export const QUESTIONS: Questions = {
     choices: ["English", "Français"],  // Exemple de choix de langues
     default: "English"
   },
+  SCHEMA_FORMAT: {
+    message: "Quel est le nom du schéma?",
+    type: "list",
+    choices: ["JSON", "zod"],
+    default: "test"
+  },
+  SAVE_TO_ZOD: {
+    message: "Voulez-vous enregistrer dans un fichier zod?",
+    type: "confirm",
+    default: true
+  },
   SAVE_TO_JSON: {
     message: "Voulez-vous enregistrer dans un fichier JSON?",
     type: "confirm",
     default: true
   
-   }
+  },
+   SELECT_ENTITY: {
+    message: "Quelle entité souhaitez-vous générer?",
+    type: "list",
+    choices: listEntities(),
+    default: "test"
+   },
+   PANEL_NAME: {
+    message: "Quel est le nom du panel?",
+    type: "input",
+    default: "test"
+  },
+  ENTRY_POINT: {
+    message: "Quel est le point d'entrée?",
+    type: "input",
+    default: "test"
+  },
+  PAGES_TO_GENERATE: {
+    message: "Quelles pages souhaitez-vous générer?",
+    type: "checkbox",
+    choices: ["index", "create", "edit", "show", "delete", "all" ],
+    default: ["index", "create", "edit", "show", "delete", "all"]
+  },  
+
+   DEFAULT_VALUE: {
+    message: "Quelle est la valeur par défaut?",
+    type: "input",
+    default: "test"
+  },
+
   // ... autres questions
 } as const;
 export type QuestionKeys = keyof typeof QUESTIONS;

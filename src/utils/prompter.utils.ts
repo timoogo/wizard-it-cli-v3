@@ -1,6 +1,8 @@
 import inquirer, { ListQuestion, CheckboxQuestion, InputQuestion, Question } from 'inquirer';
-import { Language } from './language.utils.js';
 import { QuestionKeys, QUESTIONS } from '../resources/en/en.resource.js';
+
+import * as fs from "fs";
+import { Language } from './language.utils.js';
 
 type QuestionType = 'input' | 'list' | 'confirm' | 'checkbox';  // Ajoutez d'autres types de questions au besoin
 
@@ -18,10 +20,8 @@ export class Prompter {
         // Directly use QUESTIONS from the imported resource
     }
     
-    public async ask(questionKey: QuestionKeys): Promise<any> {
+    public async ask(questionKey: QuestionKeys, defaultValue?: string): Promise<any> {
         try {
-            console.log(`Poser la question avec la clé: ${questionKey}`);
-
             const questionData = QUESTIONS[String(questionKey)];
             
             if (!questionData) {
@@ -45,7 +45,7 @@ export class Prompter {
                     type: 'input',
                     name: 'response',
                     message: questionData.message,
-                    default: questionData.default,
+                    default: defaultValue || questionData.default,
                 };
                 finalInquirerQuestion = inputQuestion;
             }
@@ -55,10 +55,43 @@ export class Prompter {
             return answer.response;
 
         } catch (error) {
-            console.error("Une erreur s'est produite lors de la pose de la question :", error);
+            console.error("Une erreur s'est produite lors de la pose de la question :", {error});
         }
     }
     
+
+
+    /**
+     * Get all created entities from the .wizgen/entity.definition.json file
+     * @returns a list of entity names
+     **/
+    public get entities() {
+        const content = fs.readFileSync('dist/.wizgen/entity.definition.json', 'utf-8');
+        const entityDefinitionPath = 'dist/.wizgen/entity.definition.json';
+        if (!fs.existsSync(entityDefinitionPath)) {
+            return [];
+        }
+        else {
+            // read the file
+            fs.readFileSync(entityDefinitionPath, 'utf-8');
+            // parse the file
+            const data = JSON.parse(content);
+
+        }
+        return ''
+    }
+
+
+
+
+
+
+    /**
+     * 
+     * @param questionKeys 
+     * @returns 
+     */
+
     public async askMultiple(questionKeys: QuestionKeys[]): Promise<Record<string, any>> {
         const responses: Record<string, any> = {};
         for (const key of questionKeys) {

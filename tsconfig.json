@@ -2,6 +2,10 @@
     "display": "Node LTS",
     "_version": "18.1.0",
     "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"],
+      },
       "typeRoots": ["node_modules/@types"],
       "outDir": "dist",
       "lib": ["es2023"],

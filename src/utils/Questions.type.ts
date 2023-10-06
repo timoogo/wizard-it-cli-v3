@@ -14,3 +14,4 @@ interface ChoiceQuestion extends BaseQuestion {
 export type ResourceTypes = "QUESTIONS" | "ERROR_MESSAGES";
 export type Question = BaseQuestion | ChoiceQuestion;
 export type Questions = Record<string, Question>;
+
