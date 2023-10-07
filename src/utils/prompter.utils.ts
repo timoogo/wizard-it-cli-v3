@@ -1,4 +1,4 @@
-import inquirer, { ListQuestion, CheckboxQuestion, InputQuestion, Question } from 'inquirer';
+import inquirer, {ListQuestion, CheckboxQuestion, InputQuestion, Question, Answers} from 'inquirer';
 import { QuestionKeys, QUESTIONS } from '../resources/en/en.resource.js';
 
 import * as fs from "fs";
@@ -19,8 +19,8 @@ export class Prompter {
         this.language = language;
         // Directly use QUESTIONS from the imported resource
     }
-    
-    public async ask(questionKey: QuestionKeys, defaultValue?: string): Promise<any> {
+
+    public async ask(questionKey: QuestionKeys, defaultValue?: string): Promise<string | undefined | null> {
         try {
             const questionData = QUESTIONS[String(questionKey)];
             
@@ -28,6 +28,12 @@ export class Prompter {
                 console.warn(`Unknown question key: ${questionKey}`);
                 return null;
             }
+            if (questionData === undefined) {
+                console.warn(`No question data for key: ${questionKey}`);
+                return null;
+            }
+
+
         
             let finalInquirerQuestion: Question;
         
@@ -50,16 +56,15 @@ export class Prompter {
                 finalInquirerQuestion = inputQuestion;
             }
             
-            const answer = await inquirer.prompt([finalInquirerQuestion]);
-            console.log(`Réponse obtenue: ${answer.response}`);
+            const answer: Answers  = await inquirer.prompt([finalInquirerQuestion]);
+           //    console.log(`Réponse obtenue: ${answer}`);
+            console.log({answer}, typeof answer);
             return answer.response;
 
         } catch (error) {
             console.error("Une erreur s'est produite lors de la pose de la question :", {error});
         }
     }
-    
-
 
     /**
      * Get all created entities from the .wizgen/entity.definition.json file
@@ -80,11 +85,6 @@ export class Prompter {
         }
         return ''
     }
-
-
-
-
-
 
     /**
      * 

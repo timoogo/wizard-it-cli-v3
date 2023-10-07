@@ -8,7 +8,7 @@ export function listEntities() {
 
     // si on peut pas trouver le fichier, on retourne un tableau vide
     if (!fs.existsSync(WIZGEN_ENTITY_DEFINITION_FILE_PATH)) {
-        throw new Error('Le fichier n\'existe pas');
+        throw new Error(`Le fichier ${WIZGEN_ENTITY_DEFINITION_FILE_PATH} n'existe pas`);
     }
     // Lire le contenu du fichier
     const rawData = fs.readFileSync(WIZGEN_ENTITY_DEFINITION_FILE_PATH, 'utf-8');
@@ -20,7 +20,7 @@ export function listEntities() {
     return entitiesData.entities.map((entity: ColumnDetails) => entity.entityName);
 }
 
-export function loadSchemaFromEntityName(entityName: string) {
+export function loadSchemaFromEntityName(entityName: string | undefined | null) {
     // Lire le contenu du fichier
     const rawData = fs.readFileSync(WIZGEN_ENTITY_DEFINITION_FILE_PATH, 'utf-8');
 

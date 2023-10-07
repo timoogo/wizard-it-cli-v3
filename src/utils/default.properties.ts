@@ -1,6 +1,6 @@
 import { ColumnDetails } from "./Column.details.interface.js";
 
-export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
+export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDetails>> = {
     id: {
       entityName: "id",
       type: "number",
@@ -12,7 +12,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     createdAt: {
-      entityName: "createdAt",
+      entityName: "created_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -22,7 +22,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     updatedAt: {
-      entityName: "updatedAt",
+      entityName: "updated_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -32,7 +32,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: false,
     },
     deletedAt: {
-      entityName: "deletedAt",
+      entityName: "deleted_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -42,7 +42,7 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       nullable: true,
     },
     entityName: {
-      entityName: "entityName",
+      entityName: "entity_name",
       type: "varchar",
       length: "255",
       isPrimary: false,
@@ -51,26 +51,25 @@ export const DEFAULT_PROPERTIES: Record<string, Partial<ColumnDetails>> = {
       isUnique: false,
       nullable: false,
     },
-      email: {
-          entityName: "email",
-          type: "varchar",
-          length: "255",
-          isPrimary: false,
-          isGenerated: false,
-          default: null,
-          isUnique: true,
-          nullable: false,
-      },
-      password: {
-          entityName: "password",
-          type: "varchar",
-          length: "255",
-          isPrimary: false,
-          isGenerated: false,
-          default: null,
-          isUnique: false,
-          nullable: false,
-      },
-      
+    email: {
+        entityName: "email",
+        type: "varchar",
+        length: "255",
+        isPrimary: false,
+        isGenerated: false,
+        default: null,
+        isUnique: true,
+        nullable: false,
+    },
+    password: {
+        entityName: "password",
+        type: "varchar",
+        length: "255",
+        isPrimary: false,
+        isGenerated: false,
+        default: null,
+        isUnique: false,
+        nullable: false,
+    },
   };
   
