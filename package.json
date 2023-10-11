@@ -18,11 +18,13 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
     "@types/node": "^20.8.0",
+    "@types/pg": "^8.10.5",
     "typescript": "^5.2.2"
   },
   "dependencies": {
     "commander": "^11.0.0",
     "inquirer": "^9.2.11",
+    "pg": "^8.11.3",
     "pluralize": "^8.0.0",
     "zod": "^3.22.4"
   }

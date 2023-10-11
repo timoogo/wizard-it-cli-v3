@@ -6,7 +6,12 @@ import { ColumnDetails } from "../utils/Column.details.interface.js";
 import { loadSchemaFromEntityName } from "../utils/entity.utils.js";
 import { DEFAULT_PROPERTIES } from "../utils/default.properties.js"
 import { ALL } from "../resources/constants/crud.constant.js";
-import {ENTITIES_NAME_SAMPLES} from "../resources/constants/samples.constant.js";
+import { ENTITIES_NAME_SAMPLES } from "../resources/constants/samples.constant.js";
+import {Driver} from "../resources/constants/drivers.constant.js";
+import { execSync } from 'child_process';
+// import pg
+import pkg from 'pg';
+const { Client } = pkg;
 
 
 const WIZGEN_FOLDER =  "dist/.wizgen";
@@ -21,6 +26,22 @@ interface EntityDefinition {
     version: number;
 }
 
+
+export const testPostgresConnection = async (connectionString: string): Promise<boolean> => {
+    const client = new Client({
+        connectionString: connectionString
+    });
+
+    try {
+        await client.connect();
+        console.log('Connexion à PostgreSQL réussie !');
+        await client.end();
+        return true;
+    } catch (error) {
+        console.error('Erreur lors de la connexion à PostgreSQL :', error);
+        return false;
+    }
+};
 
 export const generateEntity = async (command: CommandOptions) => {
     const prompter = new Prompter();
@@ -53,11 +74,13 @@ export const generateEntity = async (command: CommandOptions) => {
         const columnName = await prompter.ask(QuestionsKeysEnum.COLUMN_NAME);
         // si columnName fait partie des propriétés par défaut, on utilise les valeurs par défaut
         if (!columnName) return;
-        if(columnName in DEFAULT_PROPERTIES) {
+        // if columnname includes default properties, use default values
+
+        if(columnName) {
             const columnProperties = DEFAULT_PROPERTIES[columnName]
             if (!columnProperties) return;
             console.log(columnProperties)
-            const confirm = await prompter.ask(QuestionsKeysEnum.CONFIRM_DEFAULT_PROPERTIES, columnName);
+            const confirm = await prompter.ask(QuestionsKeysEnum.CONFIRM_DELETE_DATABASE, columnName);
             if (confirm === 'no') {
                 continue;
             } else if (confirm === 'yes') {
@@ -172,7 +195,115 @@ function copyFile(source: string, destination: string) {
     fs.copyFileSync(source, destination);
 }
 
-function appendToFile(filePath: string, content: string) {
-    // Si le fichier n'existe pas, il sera créé avec le contenu fourni
-    fs.appendFileSync(filePath, content);
+function logFilesInDirectory(key: string, directory: string) {
+    console.log(fs.readdirSync(directory));
 }
+function appendToFile(filePath: string, content: string) {
+
+// log le contenu du fichier avant l'ajout
+    console.log("avant",fs.readFileSync(filePath, 'utf-8'));
+    fs.appendFileSync(filePath, content);
+// log le contenu du fichier après l'ajout
+    console.log("après",fs.readFileSync(filePath, 'utf-8'));
+}
+
+
+export const generateEnv = async () => {
+    const prompter = new Prompter();
+    let isConnected = false;
+    let databaseName, driver, hostName, userName, password, port;
+
+    while (!isConnected) {
+        databaseName = await prompter.ask(QuestionsKeysEnum.DATABASE_NAME);
+        driver = await prompter.ask(QuestionsKeysEnum.SELECT_DRIVER);
+
+        if (driver === Driver.POSTGRES) {
+            hostName = await prompter.ask(QuestionsKeysEnum.HOST_NAME, 'localhost');
+            userName = await prompter.ask(QuestionsKeysEnum.USER_NAME, 'postgres');
+            password = await prompter.ask(QuestionsKeysEnum.PASSWORD, 'root');
+            port = await prompter.ask(QuestionsKeysEnum.PORT, '5432');
+        }
+
+        if (driver === Driver.POSTGRES) {
+            const testConnectionString = `postgresql://${userName}:${password}@${hostName}:${port}/postgres`;
+            const client = new Client({ connectionString: testConnectionString });
+            try {
+                await client.connect();
+                isConnected = true;
+                await client.end();
+                console.log("Connexion réussie à PostgreSQL !");
+            } catch (e) {
+                console.error("Erreur lors de la connexion à PostgreSQL :", e);
+                console.log("Veuillez entrer à nouveau les informations de connexion.");
+            }
+        }
+    }
+
+    const createDbClient = new Client({
+        connectionString: `postgresql://${userName}:${password}@${hostName}:${port}/postgres`
+    });
+    await createDbClient.connect();
+
+    // Vérifier si la base de données existe
+    const dbExists = await createDbClient.query(`SELECT datname FROM pg_database WHERE datname = '${databaseName}';`);
+    if (dbExists.rows.length > 0) {
+        const replaceConfirm = await prompter.ask(QuestionsKeysEnum.CONFIRM_DELETE_DATABASE);
+        if (!replaceConfirm) {
+            console.log("Base de données existante non remplacée. Opération terminée.");
+            await createDbClient.end();
+            return;
+        }
+        await createDbClient.query(`DROP DATABASE ${databaseName};`);
+    }
+
+    await createDbClient.query(`CREATE DATABASE ${databaseName};`);
+    console.log(`Base de données '${databaseName}' créée avec succès !`);
+    await createDbClient.end();
+
+    const envPath = path.join(process.cwd(), '.env');
+
+    let connectionString = '';
+    switch (driver) {
+        case Driver.MYSQL:
+            connectionString = `DATABASE_URL="mysql://${userName}:${password}@${hostName}:${port}/${databaseName}"\n`;
+            break;
+        case Driver.POSTGRES:
+            connectionString = `DATABASE_URL="postgresql://${userName}:${password}@${hostName}:${port}/${databaseName}?schema=public"\n`;
+            break;
+        case Driver.MARIADB:
+            connectionString = `DATABASE_URL="mariadb://${userName}:${password}@${hostName}:${port}/${databaseName}"\n`;
+            break;
+        default:
+            console.log('Driver non reconnu.');
+            return;
+    }
+
+    // Lisez le contenu existant du fichier .env
+    let existingContent = fs.readFileSync(envPath, 'utf-8');
+
+    // Supprimez l'ancienne chaîne de connexion DATABASE_URL si elle existe
+    const databaseUrlRegex = /^DATABASE_URL=.*$/m;
+    if (databaseUrlRegex.test(existingContent)) {
+        existingContent = existingContent.replace(databaseUrlRegex, connectionString);
+    } else {
+        // Si DATABASE_URL n'existe pas, ajoutez simplement la nouvelle chaîne de connexion à la fin
+        existingContent += `\n${connectionString}\n`;
+    }
+
+    // Écrivez le contenu mis à jour dans le fichier .env
+    fs.writeFileSync(envPath, existingContent);
+    console.log(`Chaîne de connexion pour ${driver} ajoutée ou mise à jour dans le fichier .env.`);
+
+    console.log(existingContent);
+};
+
+export const generateDb = () => {
+    try {
+        console.log('Génération du fichier de migration...');
+        execSync('prisma migrate dev --name init', { stdio: 'inherit' });
+
+        console.log('La base de données a été générée avec succès.');
+    } catch (error) {
+        console.error('Erreur lors de la génération de la base de données:', error);
+    }
+};

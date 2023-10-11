@@ -111,8 +111,8 @@ export const QUESTIONS: Questions = {
    SELECT_ENTITY: {
     message: "Quelle entité souhaitez-vous générer?",
     type: "list",
-    choices: listEntities(),
-    default: "test"
+     choices: ["pas d'entité", "test"],
+    default: "pas d'entité"
    },
    PANEL_NAME: {
     message: "Quel est le nom du panel?",

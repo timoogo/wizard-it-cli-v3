@@ -1,6 +1,7 @@
 import { Questions } from "../../utils/Questions.type.js";
 import { listEntities } from "../../utils/entity.utils.js";
 import { CRUD, ALL } from "../constants/crud.constant.js";
+import {Driver} from "../constants/drivers.constant.js";
 export const QUESTIONS: Questions = {
   DATABASE_NAME: {
     message: "What is the database name?",
@@ -10,7 +11,7 @@ export const QUESTIONS: Questions = {
   SELECT_DRIVER: {
     message: "Which driver do you want to use?",
     type: "list",
-    choices: ["MySql", "Postgres", "MariaDB"],
+    choices: [Driver.MYSQL, Driver.POSTGRES, Driver.MARIADB],
     default: "MySql"
   },
   HOST_NAME: {
@@ -114,7 +115,7 @@ export const QUESTIONS: Questions = {
     message: "Which entity do you want to generate?",
     type: "list",
     default: "test",
-    choices: listEntities()
+    choices: ["pas d'entité", "test"],
   },
   PANEL_NAME: {
     message: "What is the panel name?",
@@ -138,7 +139,14 @@ export const QUESTIONS: Questions = {
     default: null
   },
   CONFIRM_DEFAULT_PROPERTIES: {
-    message: "Are you sure?",
+    message: "Are you sure ",
+    type: "list",
+    default: false,
+    choices: ["yes", "no"]
+
+  },
+  CONFIRM_DELETE_DATABASE: {
+    message: "Are you sure you want to delete the database?",
     type: "list",
     default: false,
     choices: ["yes", "no"]
@@ -172,7 +180,8 @@ export enum QuestionsKeysEnum {
   ENTRY_POINT = "ENTRY_POINT",
   PAGES_TO_GENERATE = "PAGES_TO_GENERATE",
   DEFAULT_VALUE = "DEFAULT_VALUE",
-  CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES"
+  CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES",
+  CONFIRM_DELETE_DATABASE = "CONFIRM_DELETE_DATABASE",
 }
 
 export type QuestionKeys = keyof typeof QUESTIONS;

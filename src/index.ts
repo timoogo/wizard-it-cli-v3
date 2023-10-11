@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import path from 'path';
 import fs from 'fs';
 import { Prompter } from './utils/prompter.utils.js';
-import { generateEntity, generatePanel } from './commands/generate.cli.js';
+import {generateDb, generateEntity, generateEnv, generatePanel} from './commands/generate.cli.js';
 import { init } from './commands/init.cli.js';
 
 
@@ -13,12 +13,12 @@ const program = new Command();
 
 // Check if .wizgen exists
 const wizgenPath = path.join(process.cwd(), '.wizgen');
-if (!fs.existsSync(wizgenPath)) {
+/*if (!fs.existsSync(wizgenPath)) {
     // If .wizgen doesn't exist, execute init command
     init();
 } else {
     console.log('.wizgen directory exists, skipping init.');
-}
+}*/
 
 // If you want to use the Prompter class for interactive questions
 
@@ -40,5 +40,15 @@ generate
     .description('Generate a panel for a specific entity in a Next.js application')
     .action(generatePanel);
 
+generate
+    .command('env')
+    .description('Generate a .env file with the database credentials')
+    .action(generateEnv);
+
+
+generate
+    .command('database')
+    .description('Generate a database')
+    .action(generateDb);
 
 program.parse(process.argv);
