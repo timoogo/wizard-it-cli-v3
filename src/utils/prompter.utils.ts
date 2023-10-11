@@ -23,7 +23,7 @@ export class Prompter {
     public async ask(questionKey: QuestionKeys, defaultValue?: string): Promise<string | undefined | null> {
         try {
             const questionData = QUESTIONS[String(questionKey)];
-            
+
             if (!questionData) {
                 console.warn(`Unknown question key: ${questionKey}`);
                 return null;
@@ -34,9 +34,8 @@ export class Prompter {
             }
 
 
-        
             let finalInquirerQuestion: Question;
-        
+
             if ('choices' in questionData && (questionData.type === 'list' || questionData.type === 'checkbox')) {
                 const choiceQuestion: ListQuestion | CheckboxQuestion = {
                     type: questionData.type,
@@ -55,9 +54,9 @@ export class Prompter {
                 };
                 finalInquirerQuestion = inputQuestion;
             }
-            
-            const answer: Answers  = await inquirer.prompt([finalInquirerQuestion]);
-           //    console.log(`Réponse obtenue: ${answer}`);
+
+            const answer: Answers = await inquirer.prompt([finalInquirerQuestion]);
+            //    console.log(`Réponse obtenue: ${answer}`);
             console.log({answer}, typeof answer);
             return answer.response;
 
@@ -65,6 +64,7 @@ export class Prompter {
             console.error("Une erreur s'est produite lors de la pose de la question :", {error});
         }
     }
+
 
     /**
      * Get all created entities from the .wizgen/entity.definition.json file
