@@ -1,15 +1,16 @@
-import inquirer, {ListQuestion, CheckboxQuestion, InputQuestion, Question, Answers} from 'inquirer';
+import inquirer, {InputQuestion, Question, Answers, PasswordQuestion} from 'inquirer';
 import { QuestionKeys, QUESTIONS } from '../resources/en/en.resource.js';
-
+import {ListOrCheckboxQuestion, QuestionType} from './Questions.type.js';
 import * as fs from "fs";
 import { Language } from './language.utils.js';
 
-type QuestionType = 'input' | 'list' | 'confirm' | 'checkbox';  // Ajoutez d'autres types de questions au besoin
 
-interface CustomQuestion {
-    type: QuestionType;
-    message: string;
-    choices?: string[];  // Seulement pertinent pour 'list' et 'checkbox'
+interface CustomOptions {
+    message?: string;
+    default?: any;
+    choices?: string[];
+
+    // ... any other parameters you might want to customize
 }
 
 export class Prompter {
@@ -20,7 +21,10 @@ export class Prompter {
         // Directly use QUESTIONS from the imported resource
     }
 
-    public async ask(questionKey: QuestionKeys, defaultValue?: string): Promise<string | undefined | null> {
+    public async ask(
+        questionKey: QuestionKeys,
+        options?: CustomOptions | string
+    ): Promise<string | undefined | null> {
         try {
             const questionData = QUESTIONS[String(questionKey)];
 
@@ -28,40 +32,60 @@ export class Prompter {
                 console.warn(`Unknown question key: ${questionKey}`);
                 return null;
             }
-            if (questionData === undefined) {
-                console.warn(`No question data for key: ${questionKey}`);
-                return null;
-            }
 
+            // Determine if options is CustomOptions
+            const isCustomOptions = typeof options === 'object';
+
+            // Merge the original question data with the custom options if it's an object
+            const finalQuestionData = isCustomOptions
+                ? { ...questionData, ...options as CustomOptions }
+                : questionData;
 
             let finalInquirerQuestion: Question;
 
-            if ('choices' in questionData && (questionData.type === 'list' || questionData.type === 'checkbox')) {
-                const choiceQuestion: ListQuestion | CheckboxQuestion = {
-                    type: questionData.type,
-                    name: 'response',
-                    message: questionData.message,
-                    choices: questionData.choices,
-                    default: questionData.default,
-                };
-                finalInquirerQuestion = choiceQuestion;
-            } else {
-                const inputQuestion: InputQuestion = {
-                    type: 'input',
-                    name: 'response',
-                    message: questionData.message,
-                    default: defaultValue || questionData.default,
-                };
-                finalInquirerQuestion = inputQuestion;
+            switch (finalQuestionData.type) {
+                case 'list':
+                case 'checkbox':
+                    if ('choices' in finalQuestionData) {
+                        finalInquirerQuestion = {
+                            type: finalQuestionData.type,
+                            name: 'response',
+                            message: finalQuestionData.message,
+                            choices: finalQuestionData.choices,
+                            default: isCustomOptions ? (options as CustomOptions).default : finalQuestionData.default,
+                        } as ListOrCheckboxQuestion;
+                    } else {
+                        finalInquirerQuestion = {
+                            type: 'input',
+                            name: 'response',
+                            message: finalQuestionData.message,
+                            default: isCustomOptions ? (options as CustomOptions).default : finalQuestionData.default,
+                        } as InputQuestion;
+                    }
+                    break;
+                case 'password':
+                    finalInquirerQuestion = {
+                        type: 'password',
+                        name: 'response',
+                        message: finalQuestionData.message,
+                        mask: '*',
+                    } as PasswordQuestion;
+                    break;
+                default:
+                    finalInquirerQuestion = {
+                        type: 'input',
+                        name: 'response',
+                        message: finalQuestionData.message,
+                        default: isCustomOptions ? (options as CustomOptions).default : finalQuestionData.default,
+                    } as InputQuestion;
+                    break;
             }
 
             const answer: Answers = await inquirer.prompt([finalInquirerQuestion]);
-            //    console.log(`Réponse obtenue: ${answer}`);
-            console.log({answer}, typeof answer);
             return answer.response;
 
         } catch (error) {
-            console.error("Une erreur s'est produite lors de la pose de la question :", {error});
+            console.error("Une erreur s'est produite lors de la pose de la question :", { error });
         }
     }
 

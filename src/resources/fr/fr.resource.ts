@@ -1,6 +1,7 @@
 import { Questions } from "../../utils/Questions.type.js";
 import { listEntities } from "../../utils/entity.utils.js";
-
+import {CRUD, ALL} from "../constants/crud.constant.js";
+import {Driver} from "../constants/drivers.constant.js";
 
 export const QUESTIONS: Questions = {
   DATABASE_NAME: {
@@ -85,6 +86,12 @@ export const QUESTIONS: Questions = {
     type: "confirm",
     default: false
   },
+  SELECT_ACTION: {
+    message: "Quelle action souhaitez-vous effectuer?",
+    type: "list",
+    choices: [],
+  },
+
   SELECT_LANGUAGE: {
     message: "Quelle langue souhaitez-vous utiliser?",
     type: "list",
@@ -111,8 +118,8 @@ export const QUESTIONS: Questions = {
    SELECT_ENTITY: {
     message: "Quelle entité souhaitez-vous générer?",
     type: "list",
-     choices: ["pas d'entité", "test"],
-    default: "pas d'entité"
+    choices: listEntities(),
+    default: "no entity selected"
    },
    PANEL_NAME: {
     message: "Quel est le nom du panel?",
@@ -139,4 +146,81 @@ export const QUESTIONS: Questions = {
 
   // ... autres questions
 } as const;
+
+export enum QuestionsKeysEnum {
+  DATABASE_NAME = "DATABASE_NAME",
+  SELECT_DRIVER = "SELECT_DRIVER",
+  HOST_NAME = "HOST_NAME",
+  USER_NAME = "USER_NAME",
+  PORT = "PORT",
+  PASSWORD = "PASSWORD",
+  ENTITY_NAME = "ENTITY_NAME",
+  GENERATE_TABLE = "GENERATE_TABLE",
+  TABLE_NAME = "TABLE_NAME",
+  COLUMN_NAME = "COLUMN_NAME",
+  COLUMN_TYPE = "COLUMN_TYPE",
+  IS_PRIMARY = "IS_PRIMARY",
+  IS_GENERATED = "IS_GENERATED",
+  IS_UNIQUE = "IS_UNIQUE",
+  IS_NULABLE = "IS_NULABLE",
+  MORE_COLUMNS = "MORE_COLUMNS",
+  SELECT_LANGUAGE = "SELECT_LANGUAGE",
+  SCHEMA_FORMAT = "SCHEMA_FORMAT",
+  SAVE_TO_ZOD = "SAVE_TO_ZOD",
+  SAVE_TO_JSON = "SAVE_TO_JSON",
+  SELECT_ENTITY = "SELECT_ENTITY",
+  PANEL_NAME = "PANEL_NAME",
+  ENTRY_POINT = "ENTRY_POINT",
+  PAGES_TO_GENERATE = "PAGES_TO_GENERATE",
+  DEFAULT_VALUE = "DEFAULT_VALUE",
+  CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES",
+  CONFIRM_DELETE_DATABASE = "CONFIRM_DELETE_DATABASE",
+}
+
+
 export type QuestionKeys = keyof typeof QUESTIONS;
+
+
+export const ERROR_MESSAGES = {
+  INVALID_DRIVER: "Le driver n'est pas valide",
+  INVALID_LANGUAGE: "La langue n'est pas valide",
+  INVALID_PORT: "Le port n'est pas valide",
+  INVALID_COLUMN_TYPE: "Le type de colonne n'est pas valide",
+  INVALID_DATABASE_NAME : "Le nom de la base de données n'est pas valide",
+  INVALID_TABLE_NAME  : "Le nom de la table n'est pas valide",
+  INVALID_COLUMN_NAME : "Le nom de la colonne n'est pas valide",
+  CONNECTION_FAILED : "La connexion à la base de données a échoué",
+  QUERY_EXECUTION_FAILED  : "L'exécution de la requête a échoué",
+  DATABASE_ALREADY_EXISTS : "La base de données existe déjà",
+  TABLE_ALREADY_EXISTS : "La table existe déjà",
+  COLUMN_ALREADY_EXISTS : "La colonne existe déjà",
+  MISSING_REQUIRED_FIELDS : "Des champs obligatoires sont manquants",
+  UNSUPPORTED_OPERATION : "L'opération demandée n'est pas supportée",
+  PERMISSION_DENIED : "Permission refusée pour cette opération",
+  TIMEOUT_ERROR : "La requête a expiré",
+  UNKNOWN_ERROR : "Une erreur inconnue s'est produite",
+
+}
+export const FILE_MANAGEMENT = {
+  ALREADY_EXISTS: " existe déjà",
+  CREATED: " a été créé",
+    DIRECTORY_CREATED: "Le dossier",
+    DIRECTORY_EXISTS: "Le dossier existe déjà",
+    FILE_CREATED: "Le fichier",
+    FILE_EXISTS: "Le fichier existe déjà",
+    DELETED: " a été supprimé",
+    NOT_FOUND: " n'a pas été trouvé",
+    NOT_DELETED: " n'a pas été supprimé",
+    NOT_UPDATED: " n'a pas été mis à jour",
+    UPDATED: " a été mis à jour",
+    NOT_CREATED: " n'a pas été créé",
+    NOT_SAVED: " n'a pas été enregistré",
+    SAVED: " a été enregistré",
+    NOT_READ: " n'a pas été lu",
+    READ: " a été lu",
+    NOT_GENERATED: " n'a pas été généré",
+    GENERATED: " a été généré",
+    NOT_CONNECTED: " n'a pas été connecté",
+    CONNECTED: " a été connecté",
+
+}

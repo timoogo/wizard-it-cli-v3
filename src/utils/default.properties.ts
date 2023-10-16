@@ -2,7 +2,7 @@ import { ColumnDetails } from "./Column.details.interface.js";
 
 export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDetails>> = {
     id: {
-      entityName: "id",
+      columnName: "id",
       type: "number",
       length: "",
       isPrimary: true,
@@ -12,7 +12,7 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
       nullable: false,
     },
     createdAt: {
-      entityName: "created_at",
+      columnName: "created_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -22,7 +22,7 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
       nullable: false,
     },
     updatedAt: {
-      entityName: "updated_at",
+      columnName: "updated_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -32,7 +32,7 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
       nullable: false,
     },
     deletedAt: {
-      entityName: "deleted_at",
+      columnName: "deleted_at",
       type: "timestamp",
       length: "",
       isPrimary: false,
@@ -41,8 +41,8 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
       isUnique: false,
       nullable: true,
     },
-    entityName: {
-      entityName: "entity_name",
+    columnName: {
+      columnName: "entity_name",
       type: "varchar",
       length: "255",
       isPrimary: false,
@@ -52,7 +52,7 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
       nullable: false,
     },
     email: {
-        entityName: "email",
+        columnName: "email",
         type: "varchar",
         length: "255",
         isPrimary: false,
@@ -62,8 +62,8 @@ export const DEFAULT_PROPERTIES: Record<string, ColumnDetails | Partial<ColumnDe
         nullable: false,
     },
     password: {
-        entityName: "password",
-        type: "varchar",
+        columnName: "password",
+        type: "password",
         length: "255",
         isPrimary: false,
         isGenerated: false,

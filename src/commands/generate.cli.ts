@@ -46,48 +46,91 @@ export const testPostgresConnection = async (connectionString: string): Promise<
 export const generateEntity = async (command: CommandOptions) => {
     const prompter = new Prompter();
 
-    // Étape 1 : Vérifiez si le fichier entity.definition.json existe
+    // Step 1: Check if the file entity.definition.json exists
     const entityDefinitionPath = path.join(WIZGEN_FOLDER, WIZGEN_ENTITY_DEFINITION_FILE);
     let data: EntityDefinition = {
         entities: [],
         version: 1
     };
 
-    if (command.append && fs.existsSync(entityDefinitionPath)) {
+    if (fs.existsSync(entityDefinitionPath)) {
         const content = fs.readFileSync(entityDefinitionPath, 'utf-8');
         data = JSON.parse(content);
-        data.version += 1;
     }
 
-    // Demandez le nom de l'entité
+    if (command.append && data.entities.length) {
+        await appendEntity(data, prompter, entityDefinitionPath);
+    } else {
+        const entityName = await createNewEntity(prompter);
+        if (!entityName) {
+            console.error("Le nom de l'entité n'est pas défini.");
+            return;
+        }
+
+        let columns: ColumnDetails[] = await gatherColumnsDetails(prompter);
+
+        // Save to a JSON file (if the user wants to)
+        const saveToJson = await prompter.ask(QuestionsKeysEnum.SAVE_TO_JSON) === 'yes';
+        if (saveToJson) {
+            const entity: { entityName: string, columns: ColumnDetails[] } = {
+                entityName: entityName,
+                columns: columns
+            };
+            data.entities.push(entity);
+
+            fs.writeFileSync(entityDefinitionPath, JSON.stringify(data, null, 4));
+            console.log("Entity generated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE}`);
+        }
+    }
+}
+
+const appendEntity = async (data: EntityDefinition, prompter: Prompter, entityDefinitionPath: string) => {
+    const entityNames = data.entities.map((entity: { entityName: string }) => entity.entityName);
+    const selectedEntityName = await prompter.ask("SELECT_ENTITY", {
+        message: "Pour quelle entité souhaitez-vous ajouter des colonnes ?",
+        choices: entityNames
+    });
+
+    // Use `selectedEntityName` to identify which entity should be modified.
+    // Add more columns to the selected entity
+    const additionalColumns: ColumnDetails[] = await gatherColumnsDetails(prompter);
+    const entity = data.entities.find(e => e.entityName === selectedEntityName);
+    if (entity) {
+        entity.columns.push(...additionalColumns);
+    }
+
+    // Save the modifications
+    fs.writeFileSync(entityDefinitionPath, JSON.stringify(data, null, 4));
+    console.log("Entity updated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE}`);
+}
+
+const createNewEntity = async (prompter: Prompter): Promise<string | null> => {
     const randomIndex = Math.floor(Math.random() * ENTITIES_NAME_SAMPLES.length);
     const entityName = await prompter.ask("ENTITY_NAME", ENTITIES_NAME_SAMPLES[randomIndex]);
     if (!entityName) {
-        console.error("Le nom de l'entité n'est pas défini."); //Remplacer par un Raise error
-        return;
+        return null;
     }
+    return entityName;
+}
 
+const gatherColumnsDetails = async (prompter: Prompter): Promise<ColumnDetails[]> => {
     let columns: ColumnDetails[] = [];
     let addMoreColumns = true;
 
     while (addMoreColumns) {
         const columnName = await prompter.ask(QuestionsKeysEnum.COLUMN_NAME);
-        // si columnName fait partie des propriétés par défaut, on utilise les valeurs par défaut
-        if (!columnName) return;
-        // if columnname includes default properties, use default values
+        if (!columnName) {
+            console.error("Le nom de la colonne n'est pas défini.");
+            break;
+        }
 
-        if(columnName) {
-            const columnProperties = DEFAULT_PROPERTIES[columnName]
-            if (!columnProperties) return;
-            console.log(columnProperties)
-            const confirm = await prompter.ask(QuestionsKeysEnum.CONFIRM_DELETE_DATABASE, columnName);
-            if (confirm === 'no') {
-                continue;
-            } else if (confirm === 'yes') {
+        if (DEFAULT_PROPERTIES.hasOwnProperty(columnName)) {
+            const columnProperties = DEFAULT_PROPERTIES[columnName];
+            const confirm = await prompter.ask(QuestionsKeysEnum.CONFIRM_DEFAULT_PROPERTIES, columnName);
+            if (confirm === 'yes') {
                 columns.push(columnProperties as Required<ColumnDetails>);
             }
-        }
-        else {
+        } else {
             const columnType = await prompter.ask(QuestionsKeysEnum.COLUMN_TYPE);
             const isPrimary = await prompter.ask(QuestionsKeysEnum.IS_PRIMARY) === 'yes';
             const isGenerated = await prompter.ask(QuestionsKeysEnum.IS_GENERATED) === 'yes';
@@ -95,7 +138,7 @@ export const generateEntity = async (command: CommandOptions) => {
             const isNullable = await prompter.ask(QuestionsKeysEnum.IS_NULABLE) === 'yes';
 
             columns.push(<ColumnDetails>{
-                entityName: columnName,
+               columnName: columnName,
                 type: columnType,
                 isPrimary,
                 isGenerated,
@@ -108,21 +151,8 @@ export const generateEntity = async (command: CommandOptions) => {
         addMoreColumns = await prompter.ask(QuestionsKeysEnum.MORE_COLUMNS) === 'yes';
     }
 
-    // Enregistrez dans un fichier JSON (si l'utilisateur le souhaite)
-    const saveToJson = await prompter.ask(QuestionsKeysEnum.SAVE_TO_JSON) === 'yes';
-    if (saveToJson) {
-        const entity: {entityName: string, columns: ColumnDetails[]} = {
-            entityName: entityName,
-            columns: columns
-        };
-        data.entities.push(entity);
-
-        fs.writeFileSync(entityDefinitionPath, JSON.stringify(data, null, 4));
-
-        console.log("Entity generated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE}`);
-    }
+    return columns;
 }
-
 
 export async function generatePanel() {
     const prompter = new Prompter();
@@ -220,7 +250,7 @@ export const generateEnv = async () => {
         if (driver === Driver.POSTGRES) {
             hostName = await prompter.ask(QuestionsKeysEnum.HOST_NAME, 'localhost');
             userName = await prompter.ask(QuestionsKeysEnum.USER_NAME, 'postgres');
-            password = await prompter.ask(QuestionsKeysEnum.PASSWORD, 'root');
+            password = await prompter.ask(QuestionsKeysEnum.PASSWORD);
             port = await prompter.ask(QuestionsKeysEnum.PORT, '5432');
         }
 

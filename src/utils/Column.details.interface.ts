@@ -1,5 +1,5 @@
 export interface ColumnDetails {
-    entityName: string;
+    columnName: string;
     type: string;
     length?: string | number | null;
     isPrimary: boolean;

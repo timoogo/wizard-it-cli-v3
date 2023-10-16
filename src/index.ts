@@ -1,29 +1,42 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-
-import path from 'path';
 import fs from 'fs';
-import { Prompter } from './utils/prompter.utils.js';
+
 import {generateDb, generateEntity, generateEnv, generatePanel} from './commands/generate.cli.js';
 import { init } from './commands/init.cli.js';
+import {directoryName} from "./resources/constants/utils.constant.js";
+import {configureSettings} from "./commands/config.cli.js";
 
 
 
 const program = new Command();
 
+program.version('0.0.1');
+
+program
+    .command('init')
+    .description('Initialize a new project')
+    .action(init);
+
+program
+    .command('settings')
+    .description('Change the settings of the project')
+    .action(configureSettings);
+
 // Check if .wizgen exists
-const wizgenPath = path.join(process.cwd(), '.wizgen');
-/*if (!fs.existsSync(wizgenPath)) {
-    // If .wizgen doesn't exist, execute init command
-    init();
-} else {
-    console.log('.wizgen directory exists, skipping init.');
-}*/
 
-// If you want to use the Prompter class for interactive questions
+if (!fs.existsSync(directoryName)) init();
 
-// For demonstration, you can ask a question like this:
-// Commande principale `generate`
+
+
+
+
+
+
+
+
+
+
 const generate = program
     .command('generate')
     .description('Generate command with subcommands');
@@ -32,6 +45,8 @@ const generate = program
 generate
     .command('entity')
     .description('Generate an entity')
+    .alias('gen:entity')
+    .option("--append", "Append the entity to the existing ones")
     .action(generateEntity);
 
 // Sous-commande `panel` pour la commande `generate`
