@@ -19,5 +19,5 @@
       "moduleResolution": "node16"
     },
     "include": ["src", "dist/index.js"],
-    "exclude": ["node_modules", "dist", "src/resources/template/*"]
+    "exclude": ["node_modules", "dist", "src/resources/template/**/*"]
   }

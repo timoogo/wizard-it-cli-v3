@@ -2,10 +2,12 @@
 import { Command } from 'commander';
 import fs from 'fs';
 
-import {generateDb, generateEntity, generateEnv, generatePanel} from './commands/generate.cli.js';
 import { init } from './commands/init.cli.js';
 import {directoryName} from "./resources/constants/utils.constant.js";
 import {configureSettings} from "./commands/config.cli.js";
+import {createEntityDefinition, generateEnv} from "./commands/generate.cli.js";
+import {generatePanel} from "./commands/generate/panel.cli.js";
+import {generateDb} from "./commands/generate/database.cli.js";
 
 
 
@@ -47,7 +49,7 @@ generate
     .description('Generate an entity')
     .alias('gen:entity')
     .option("--append", "Append the entity to the existing ones")
-    .action(generateEntity);
+    .action(createEntityDefinition);
 
 // Sous-commande `panel` pour la commande `generate`
 generate

@@ -145,7 +145,7 @@ export const QUESTIONS: Questions = {
         default: "null"
     },
     CONFIRM_DEFAULT_PROPERTIES: {
-        message: "Are you sure ",
+        message: "Do you want to use the default properties?",
         type: "list",
         default: false,
         choices: ["yes", "no"]
@@ -157,6 +157,12 @@ export const QUESTIONS: Questions = {
         default: false,
         choices: ["yes", "no"]
 
+    },
+    USE_DEFAULT_PROPERTIES: {
+    
+        message: "Do you want to use the default properties?",
+        type: "list",
+        choices: ["yes", "no"]
     }
 }
 

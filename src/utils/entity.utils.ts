@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { ColumnDetails } from 'src/utils/Column.details.interface.js';
+import { ColumnDetails } from './Column.details.interface.js';
 
 const WIZGEN_FOLDER = "dist/.wizgen";
 const WIZGEN_ENTITY_DEFINITION_FILE = 'entity.definition.json';
@@ -17,7 +17,7 @@ export function listEntities() {
     const entitiesData = JSON.parse(rawData);
     
     // Extraire les noms des entités
-    return entitiesData.entities.map((entity: ColumnDetails) => entity.entityName);
+    return entitiesData.entities.map((entity: ColumnDetails) => entity.columnName);
 }
 
 export function loadSchemaFromEntityName(entityName: string | undefined | null) {
@@ -28,7 +28,7 @@ export function loadSchemaFromEntityName(entityName: string | undefined | null) 
     const entitiesData = JSON.parse(rawData);
 
     // trouver l'entité correspondante au nom de l'entité donné en paramètre
-    const entity = entitiesData.entities.find((entity: ColumnDetails) => entity.entityName === entityName);
+    const entity = entitiesData.entities.find((entity: ColumnDetails) => entity.columnName === entityName);
 
     // si on ne trouve pas l'entité, on retourne un tableau vide
     if (!entity) {

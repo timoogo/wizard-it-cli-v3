@@ -1,4 +1,4 @@
-import { API_ROUTES } from "@/constants/api.routes.constants";
+import { API_ROUTES } from "../../constants/";
 import { Entity } from "@/types/Entity.type";
 import { NextResponse } from "next/server";
 
