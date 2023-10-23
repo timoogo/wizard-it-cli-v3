@@ -2,6 +2,8 @@ import {Prompter} from "../../utils/prompter.utils.js";
 import {QuestionsKeysEnum} from "../../resources/en/en.resource.js";
 import {loadSchemaFromEntityName} from "../../utils/entity.utils.js";
 import {ALL} from "../../resources/constants/crud.constant.js";
+import {directoryName} from "../../resources/constants/utils.constant.js";
+import fs from "fs";
 
 export async function generatePanel() {
     const prompter = new Prompter();
@@ -23,9 +25,9 @@ export async function generatePanel() {
     const pagesToGenerate = await prompter.ask(QuestionsKeysEnum.PAGES_TO_GENERATE, ALL);
 
     // 4. Créer les fichiers et dossiers nécessaires
-    // 4.1. Créer le dossier du panneau dans le dossier des pages
-    // 4.2. Créer le dossier du panneau dans le dossier des composants
-    // 4.3. Créer le dossier du panneau dans le dossier des modèles
+    const panelDirectory = `${directoryName}/src/panels/${panelName}`;
+    const templateDirectory = `${directoryName}/src/template`;
+    const distDirectory = `${directoryName}/dist`;
 
 
 

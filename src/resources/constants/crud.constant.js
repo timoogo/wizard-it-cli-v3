@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CRUD = exports.ALL = exports.INDEX = exports.DELETE = exports.EDIT = exports.CREATE = exports.SHOW = void 0;
+exports.SHOW = "show";
+exports.CREATE = "create";
+exports.EDIT = "edit";
+exports.DELETE = "delete";
+exports.INDEX = "index";
+exports.ALL = "all";
+exports.CRUD = [exports.SHOW, exports.CREATE, exports.EDIT, exports.DELETE, exports.INDEX, exports.ALL];

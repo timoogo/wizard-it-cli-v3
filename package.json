@@ -19,6 +19,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/node": "^20.8.0",
     "@types/pg": "^8.10.5",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   },
   "dependencies": {

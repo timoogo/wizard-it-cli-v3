@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';

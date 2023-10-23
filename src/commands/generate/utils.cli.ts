@@ -3,9 +3,8 @@ import {ColumnDetails} from "../../utils/Column.details.interface.js";
 import {QuestionsKeysEnum} from "../../resources/en/en.resource.js";
 import {DEFAULT_PROPERTIES} from "../../utils/default.properties.js";
 import fs from "fs";
+import {WIZGEN_ENTITY_DEFINITION_FILE_PATH, WIZGEN_FOLDER} from "../../resources/constants/utils.constant.js";
 
-export const WIZGEN_FOLDER = 'dist/.wizgen';
-export const WIZGEN_ENTITY_DEFINITION_FILE = 'entity.definition.json';
 
 export interface EntityDefinition {
     entities: Entity[];
@@ -65,6 +64,6 @@ export const saveEntityDefinition = async (data: EntityDefinition, entityDefinit
     const saveToJson = await (new Prompter()).ask(QuestionsKeysEnum.SAVE_TO_JSON) === 'yes';
     if (saveToJson) {
         fs.writeFileSync(entityDefinitionPath, JSON.stringify(data, null, 4));
-        console.log("Entity generated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE}`);
+        console.log("Entity generated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE_PATH}`);
     }
 };

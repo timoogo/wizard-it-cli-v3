@@ -6,19 +6,13 @@ import { ENTITIES_NAME_SAMPLES } from "../resources/constants/samples.constant.j
 import {Driver} from "../resources/constants/drivers.constant.js";
 // import pg
 import pkg from 'pg';
-import {directoryName} from "../resources/constants/utils.constant.js";
+import {directoryName, WIZGEN_FOLDER, WIZGEN_ENTITY_DEFINITION_FILE} from "../resources/constants/utils.constant.js";
 import {
     Entity,
     EntityDefinition, getColumnDetails, saveEntityDefinition,
     useDefaultProperties,
-    WIZGEN_ENTITY_DEFINITION_FILE,
-    WIZGEN_FOLDER
 } from "../commands/generate/utils.cli.js";
 const { Client } = pkg;
-
-
-
-
 
 export const createEntityDefinition = async (): Promise<void> => {
     const prompter = new Prompter();

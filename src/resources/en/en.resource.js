@@ -1,9 +1,19 @@
-import {Questions} from "../../utils/Questions.type.js";
-import {listEntities} from "../../utils/entity.utils.js";
-import {CRUD, ALL} from "../constants/crud.constant.js";
-import {Driver} from "../constants/drivers.constant.js";
-
-export const QUESTIONS: Questions = {
+"use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FILE_MANAGEMENT = exports.ERROR_MESSAGES = exports.QuestionsKeysEnum = exports.QUESTIONS = void 0;
+var entity_utils_js_1 = require("../../utils/entity.utils.js");
+var crud_constant_js_1 = require("../constants/crud.constant.js");
+var drivers_constant_js_1 = require("../constants/drivers.constant.js");
+exports.QUESTIONS = {
     DATABASE_NAME: {
         message: "What is the database name?",
         type: "input",
@@ -12,7 +22,7 @@ export const QUESTIONS: Questions = {
     SELECT_DRIVER: {
         message: "Which driver do you want to use?",
         type: "list",
-        choices: [Driver.MYSQL, Driver.POSTGRES, Driver.MARIADB],
+        choices: [drivers_constant_js_1.Driver.MYSQL, drivers_constant_js_1.Driver.POSTGRES, drivers_constant_js_1.Driver.MARIADB],
         default: "MySql"
     },
     HOST_NAME: {
@@ -32,7 +42,7 @@ export const QUESTIONS: Questions = {
     },
     PASSWORD: {
         message: "Please enter your password:",
-        type: "password",  // Use "password" to hide the input,
+        type: "password", // Use "password" to hide the input,
     },
     ENTITY_NAME: {
         message: "What is the entity name?",
@@ -94,7 +104,7 @@ export const QUESTIONS: Questions = {
         message: "Which language do you want to use?",
         type: "list",
         default: "English",
-        choices: ["English", "Français"]  // Example of language choices
+        choices: ["English", "Français"] // Example of language choices
     },
     SELECT_ACTION: {
         message: "What action do you want to perform?",
@@ -105,7 +115,7 @@ export const QUESTIONS: Questions = {
         message: "In which format do you want to save the schema?",
         type: "list",
         default: "JSON",
-        choices: ["JSON", "Zod"]  // Add the formats you want
+        choices: ["JSON", "Zod"] // Add the formats you want
     },
     SAVE_TO_ZOD: {
         message: "Do you want to save the schema to a Zod file?",
@@ -121,7 +131,7 @@ export const QUESTIONS: Questions = {
         message: "Which entity do you want to generate?",
         type: "list",
         default: "no entity selected",
-        choices: ["no entity selected"]
+        choices: __spreadArray([], (0, entity_utils_js_1.listEntities)(), true)
     },
     PANEL_NAME: {
         message: "What is the panel name?",
@@ -136,7 +146,7 @@ export const QUESTIONS: Questions = {
     PAGES_TO_GENERATE: {
         message: "Which pages do you want to generate?",
         type: "checkbox",
-        choices: [...CRUD],
+        choices: __spreadArray([], crud_constant_js_1.CRUD, true),
         default: 5
     },
     DEFAULT_VALUE: {
@@ -149,55 +159,50 @@ export const QUESTIONS: Questions = {
         type: "list",
         default: false,
         choices: ["yes", "no"]
-
     },
     CONFIRM_DELETE_DATABASE: {
         message: "Are you sure you want to delete the database?",
         type: "list",
         default: false,
         choices: ["yes", "no"]
-
     },
     USE_DEFAULT_PROPERTIES: {
-    
         message: "Do you want to use the default properties?",
         type: "list",
         choices: ["yes", "no"]
     }
-}
-
-export enum QuestionsKeysEnum {
-    DATABASE_NAME = "DATABASE_NAME",
-    SELECT_DRIVER = "SELECT_DRIVER",
-    HOST_NAME = "HOST_NAME",
-    USER_NAME = "USER_NAME",
-    PORT = "PORT",
-    PASSWORD = "PASSWORD",
-    ENTITY_NAME = "ENTITY_NAME",
-    GENERATE_TABLE = "GENERATE_TABLE",
-    TABLE_NAME = "TABLE_NAME",
-    COLUMN_NAME = "COLUMN_NAME",
-    COLUMN_TYPE = "COLUMN_TYPE",
-    IS_PRIMARY = "IS_PRIMARY",
-    IS_GENERATED = "IS_GENERATED",
-    IS_UNIQUE = "IS_UNIQUE",
-    IS_NULABLE = "IS_NULABLE",
-    MORE_COLUMNS = "MORE_COLUMNS",
-    SELECT_LANGUAGE = "SELECT_LANGUAGE",
-    SCHEMA_FORMAT = "SCHEMA_FORMAT",
-    SAVE_TO_ZOD = "SAVE_TO_ZOD",
-    SAVE_TO_JSON = "SAVE_TO_JSON",
-    SELECT_ENTITY = "SELECT_ENTITY",
-    PANEL_NAME = "PANEL_NAME",
-    ENTRY_POINT = "ENTRY_POINT",
-    PAGES_TO_GENERATE = "PAGES_TO_GENERATE",
-    DEFAULT_VALUE = "DEFAULT_VALUE",
-    CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES",
-    CONFIRM_DELETE_DATABASE = "CONFIRM_DELETE_DATABASE",
-}
-
-export type QuestionKeys = keyof typeof QUESTIONS;
-export const ERROR_MESSAGES = {
+};
+var QuestionsKeysEnum;
+(function (QuestionsKeysEnum) {
+    QuestionsKeysEnum["DATABASE_NAME"] = "DATABASE_NAME";
+    QuestionsKeysEnum["SELECT_DRIVER"] = "SELECT_DRIVER";
+    QuestionsKeysEnum["HOST_NAME"] = "HOST_NAME";
+    QuestionsKeysEnum["USER_NAME"] = "USER_NAME";
+    QuestionsKeysEnum["PORT"] = "PORT";
+    QuestionsKeysEnum["PASSWORD"] = "PASSWORD";
+    QuestionsKeysEnum["ENTITY_NAME"] = "ENTITY_NAME";
+    QuestionsKeysEnum["GENERATE_TABLE"] = "GENERATE_TABLE";
+    QuestionsKeysEnum["TABLE_NAME"] = "TABLE_NAME";
+    QuestionsKeysEnum["COLUMN_NAME"] = "COLUMN_NAME";
+    QuestionsKeysEnum["COLUMN_TYPE"] = "COLUMN_TYPE";
+    QuestionsKeysEnum["IS_PRIMARY"] = "IS_PRIMARY";
+    QuestionsKeysEnum["IS_GENERATED"] = "IS_GENERATED";
+    QuestionsKeysEnum["IS_UNIQUE"] = "IS_UNIQUE";
+    QuestionsKeysEnum["IS_NULABLE"] = "IS_NULABLE";
+    QuestionsKeysEnum["MORE_COLUMNS"] = "MORE_COLUMNS";
+    QuestionsKeysEnum["SELECT_LANGUAGE"] = "SELECT_LANGUAGE";
+    QuestionsKeysEnum["SCHEMA_FORMAT"] = "SCHEMA_FORMAT";
+    QuestionsKeysEnum["SAVE_TO_ZOD"] = "SAVE_TO_ZOD";
+    QuestionsKeysEnum["SAVE_TO_JSON"] = "SAVE_TO_JSON";
+    QuestionsKeysEnum["SELECT_ENTITY"] = "SELECT_ENTITY";
+    QuestionsKeysEnum["PANEL_NAME"] = "PANEL_NAME";
+    QuestionsKeysEnum["ENTRY_POINT"] = "ENTRY_POINT";
+    QuestionsKeysEnum["PAGES_TO_GENERATE"] = "PAGES_TO_GENERATE";
+    QuestionsKeysEnum["DEFAULT_VALUE"] = "DEFAULT_VALUE";
+    QuestionsKeysEnum["CONFIRM_DEFAULT_PROPERTIES"] = "CONFIRM_DEFAULT_PROPERTIES";
+    QuestionsKeysEnum["CONFIRM_DELETE_DATABASE"] = "CONFIRM_DELETE_DATABASE";
+})(QuestionsKeysEnum || (exports.QuestionsKeysEnum = QuestionsKeysEnum = {}));
+exports.ERROR_MESSAGES = {
     INVALID_DRIVER: "The specified driver is not supported.",
     INVALID_LANGUAGE: "The specified language is not supported.",
     INVALID_PORT: "The specified port is invalid.",
@@ -217,9 +222,7 @@ export const ERROR_MESSAGES = {
     UNKNOWN_ERROR: "An unknown error occurred.",
     // ... add other error messages as needed
 };
-
-
-export const FILE_MANAGEMENT = {
+exports.FILE_MANAGEMENT = {
     ALRADY_EXISTS: " already exists.",
     CREATED: " created successfully.",
     DIRECTORY_CREATED: "Directory",

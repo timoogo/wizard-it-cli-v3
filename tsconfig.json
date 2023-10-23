@@ -4,7 +4,10 @@
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@/*": ["src/*"],
+        "@resources/*": ["src/resources/*"],
+        "@src/*": ["src/*"],
+        "@utils/*": ["src/utils/*"],
+        "@commands/*": ["src/commands/*"],
       },
       "typeRoots": ["node_modules/@types"],
       "outDir": "dist",
@@ -18,6 +21,11 @@
       "forceConsistentCasingInFileNames": true,
       "moduleResolution": "node16"
     },
+    "exclude": ["node_modules", "dist", "src/resources/template"],
     "include": ["src", "dist/index.js"],
-    "exclude": ["node_modules", "dist", "src/resources/template/**/*"]
+
+  "ts-node": {
+    // Do not forget to `npm i -D tsconfig-paths`
+    "require": ["tsconfig-paths/register"]
+  }
   }
