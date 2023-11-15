@@ -1,45 +1,59 @@
- import * as en from "../resources/en/en.resource.js";
- import * as fr from "../resources/fr/fr.resource.js";
-// import { Questions, ErrorMessages, ResourceTypes } from "./Questions.type.js";
-
-import {Questions, Resources, ResourceTypes} from "../utils/Questions.type.js";
- import {getTranslation} from "../utils/askQuestion.js";
 
 export enum Language {
   EN = "English (US)",
   FR = "Français (FR)",
 }
-// list of all languages supported by the CLI inside a array
+
+// Liste de toutes les langues supportées par la CLI dans un tableau
 export const LANGUAGES: Language[] = [Language.EN, Language.FR];
- interface SystemLanguageInfo {
-   fullLanguage: string;
-   langCode: string;
- }
+
+export interface SystemLanguageInfo {
+  fullLanguage: string;
+  langCode: Language;
+}
 
 export enum Separator {
   UNDERSCORE = "_",
   DASH = "-",
 }
 
+// Constantes pour les chaînes codées en dur
+const DEFAULT_LOCALE = 'en_US';
+const LOCALE_FR = 'fr_FR';
+const LANG_CODE_FR = 'fr';
+
 export const getSystemLanguage = (): SystemLanguageInfo => {
-    const fullLanguage = process.env.LANG || '';
-    const langCode = fullLanguage.split('_')[0] || Language.EN;
+  const systemLocale = process.env.LANG || DEFAULT_LOCALE;
+  const [langCode, ] = systemLocale.split(Separator.UNDERSCORE);
+  
+  // Vérifiez si langCode correspond à un des codes de langue définis
+  const fullLanguage = langCode === LANG_CODE_FR ? LOCALE_FR : DEFAULT_LOCALE;
+  const language = langCode === LANG_CODE_FR ? Language.FR : Language.EN;
 
-    if (langCode !== Language.EN && langCode !== Language.FR) {
-        return { fullLanguage: 'en_US', langCode: Language.EN };
-    }
-
-    return { fullLanguage, langCode };
+  return { fullLanguage, langCode: language };
 };
 
- const LANGUAGE_RESOURCES: Record<Language, Resources> = {
-   [Language.EN]: en,
-   [Language.FR]: fr,
- };
+export type Questions = Record<string, string>;
+export type ErrorMessages = Record<string, string>;
 
+export interface Resources {
+  QUESTIONS: Questions;
+  ERROR_MESSAGES: ErrorMessages;
+}
 
-const languageInfo = getSystemLanguage();
- let currentLang: Language = languageInfo.langCode === "fr" ? Language.FR : Language.EN;
+// Ici, vous devriez remplir les ressources linguistiques pour chaque langue.
+const LANGUAGE_RESOURCES: Record<Language, Resources> = {
+  [Language.EN]: {
+    QUESTIONS: {},
+    ERROR_MESSAGES: {},
+  },
+  [Language.FR]: {
+    QUESTIONS: {},
+    ERROR_MESSAGES: {},
+  },
+};
+
+let currentLang: Language = getSystemLanguage().langCode;
 
 export const getCurrentLang = (): Language => {
   return currentLang;
@@ -50,31 +64,29 @@ export const setCurrentLang = (targetedLang: Language): void => {
 };
 
 export const setLangToSystem = (): void => {
-  currentLang = languageInfo.langCode === "fr" ? Language.FR : Language.EN;
+  currentLang = getSystemLanguage().langCode;
 };
 
-
-
+export function getTranslation(key: string, resourceType: keyof Resources): string | undefined {
+  const resources = LANGUAGE_RESOURCES[currentLang];
+  const resource = resources[resourceType];
+  return resource[key];
+}
 
 export function getQuestionTranslation(key: string): string {
-    return getTranslation(key, "QUESTIONS") || '';
+  return getTranslation(key, "QUESTIONS") || '';
 }
 
 export function getErrorMessageTranslation(key: string): string {
-    return getTranslation(key, "ERROR_MESSAGES") || '';
+  return getTranslation(key, "ERROR_MESSAGES") || '';
 }
 
-
-  
-
-
-
- export enum StringType {
-      CamelCase,
-      CapitalizedCase,
-      SpacesToUnderscores,
-      CamelCaseToUnderscores
- }
+export enum StringType {
+  CamelCase,
+  CapitalizedCase,
+  SpacesToUnderscores,
+  CamelCaseToUnderscores
+}
 
 // function transformString(input: string, type: StringType): string {
 //     switch (type) {

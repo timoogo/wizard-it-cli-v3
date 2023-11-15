@@ -148,7 +148,7 @@ export const QUESTIONS: Questions = {
         message: "Do you want to use the default properties?",
         type: "list",
         default: false,
-        choices: ["yes", "no"]
+        choices: ["yes", "no", "show"]
 
     },
     CONFIRM_DELETE_DATABASE: {
@@ -163,38 +163,16 @@ export const QUESTIONS: Questions = {
         message: "Do you want to use the default properties?",
         type: "list",
         choices: ["yes", "no"]
-    }
+    },
+    USE_WIZARD_INIT: {
+        message: "Do you want to use wizard init?",
+        type: "list",
+        choices: ["yes", "no"]
+    },
 }
 
-export enum QuestionsKeysEnum {
-    DATABASE_NAME = "DATABASE_NAME",
-    SELECT_DRIVER = "SELECT_DRIVER",
-    HOST_NAME = "HOST_NAME",
-    USER_NAME = "USER_NAME",
-    PORT = "PORT",
-    PASSWORD = "PASSWORD",
-    ENTITY_NAME = "ENTITY_NAME",
-    GENERATE_TABLE = "GENERATE_TABLE",
-    TABLE_NAME = "TABLE_NAME",
-    COLUMN_NAME = "COLUMN_NAME",
-    COLUMN_TYPE = "COLUMN_TYPE",
-    IS_PRIMARY = "IS_PRIMARY",
-    IS_GENERATED = "IS_GENERATED",
-    IS_UNIQUE = "IS_UNIQUE",
-    IS_NULABLE = "IS_NULABLE",
-    MORE_COLUMNS = "MORE_COLUMNS",
-    SELECT_LANGUAGE = "SELECT_LANGUAGE",
-    SCHEMA_FORMAT = "SCHEMA_FORMAT",
-    SAVE_TO_ZOD = "SAVE_TO_ZOD",
-    SAVE_TO_JSON = "SAVE_TO_JSON",
-    SELECT_ENTITY = "SELECT_ENTITY",
-    PANEL_NAME = "PANEL_NAME",
-    ENTRY_POINT = "ENTRY_POINT",
-    PAGES_TO_GENERATE = "PAGES_TO_GENERATE",
-    DEFAULT_VALUE = "DEFAULT_VALUE",
-    CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES",
-    CONFIRM_DELETE_DATABASE = "CONFIRM_DELETE_DATABASE",
-}
+
+
 
 export type QuestionKeys = keyof typeof QUESTIONS;
 export const ERROR_MESSAGES = {
@@ -215,6 +193,7 @@ export const ERROR_MESSAGES = {
     PERMISSION_DENIED: "Permission denied for this operation.",
     TIMEOUT_ERROR: "The query timed out.",
     UNKNOWN_ERROR: "An unknown error occurred.",
+    ENTIITY_DEFINITION_NOT_FOUND: "Entity definition not found.",
     // ... add other error messages as needed
 };
 

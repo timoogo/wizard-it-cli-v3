@@ -4,10 +4,7 @@
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@resources/*": ["src/resources/*"],
-        "@src/*": ["src/*"],
-        "@utils/*": ["src/utils/*"],
-        "@commands/*": ["src/commands/*"],
+        "@/*": ["src/*"],
       },
       "typeRoots": ["node_modules/@types"],
       "outDir": "dist",
@@ -16,16 +13,12 @@
       "target": "es2022",
       "strict": true,
       "noUncheckedIndexedAccess": true,
+      "resolveJsonModule": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
       "moduleResolution": "node16"
     },
-    "exclude": ["node_modules", "dist", "src/resources/template"],
-    "include": ["src", "dist/index.js"],
-
-  "ts-node": {
-    // Do not forget to `npm i -D tsconfig-paths`
-    "require": ["tsconfig-paths/register"]
-  }
+    "include": ["src", "dist/index.js", "templates/api", "templates/generic-entity"],
+    "exclude": ["node_modules", "dist", "src/resources/template/*"]
   }

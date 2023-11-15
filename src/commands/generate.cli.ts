@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Prompter } from "../utils/prompter.utils.js";
-import { QuestionsKeysEnum} from '../resources/en/en.resource.js';
 import { ENTITIES_NAME_SAMPLES } from "../resources/constants/samples.constant.js";
 import {Driver} from "../resources/constants/drivers.constant.js";
 // import pg
@@ -12,22 +11,39 @@ import {
     EntityDefinition, getColumnDetails, saveEntityDefinition,
     useDefaultProperties,
 } from "../commands/generate/utils.cli.js";
+import { init } from "./init.cli.js";
+import { DEFAULT_PROPERTIES } from "../utils/default.properties.js";
+import { ColumnDetails } from "../utils/Column.details.interface.js";
+import { log } from "console";
+import { ErrorMessagesEnum, QuestionsKeysEnum } from "../resources/global/translations.js";
 const { Client } = pkg;
 
 export const createEntityDefinition = async (): Promise<void> => {
+    // Initialization
     const prompter = new Prompter();
 
-    // Step 1: Check if the entity.definition.json file exists
+    // Define the path for entity definition file
     const entityDefinitionPath = path.join(WIZGEN_FOLDER, WIZGEN_ENTITY_DEFINITION_FILE);
     let data: EntityDefinition = {
-        entities: [],
-        version: 1
+        entities: []
     };
 
-    if (fs.existsSync(entityDefinitionPath)) {
-        const content = fs.readFileSync(entityDefinitionPath, 'utf-8');
-        data = JSON.parse(content);
-        data.version++;
+    const isAppendMode = process.argv.includes("--append");
+
+    if (isAppendMode && fs.existsSync(entityDefinitionPath)) {
+        try {
+            const content = fs.readFileSync(entityDefinitionPath, 'utf-8');
+            data = JSON.parse(content);
+            if (!data.entities) {
+                data.entities = [];
+            }
+            data.version = (data.version || 0) + 1;
+        } catch (error) {
+            console.error("Erreur lors de la lecture du fichier entity.definition.json:", error);
+        }
+    } else {
+        await init();
+        data.version = 1;
     }
 
     // Ask for the entity name
@@ -38,16 +54,60 @@ export const createEntityDefinition = async (): Promise<void> => {
         return;
     }
 
-    const columns = [...await useDefaultProperties(prompter), ...await getColumnDetails(prompter)];
+    const columns: ColumnDetails[] = [];
+    let addAnotherColumn = true;
 
-    const entity: Entity = {
-        entityName: entityName,
-        columns: columns
-    };
-    data.entities.push(entity);
+    while (addAnotherColumn) {
+        // Ask for the column name
+        const columnName = await prompter.ask(QuestionsKeysEnum.COLUMN_NAME);
+        if (columnName && DEFAULT_PROPERTIES.hasOwnProperty(columnName)) {
+            const columnProperty = DEFAULT_PROPERTIES[columnName];
+            const useDefault = await prompter.ask(QuestionsKeysEnum.CONFIRM_DEFAULT_PROPERTIES) === 'show';
+            if (useDefault && columnProperty) {
+                console.table(columnProperty);
+                const useDefault = await prompter.ask(QuestionsKeysEnum.CONFIRM_DEFAULT_PROPERTIES) === 'yes';
+                columns.push(columnProperty as ColumnDetails);
+            }
+        } else {
+            const columnType = await prompter.ask(QuestionsKeysEnum.COLUMN_TYPE);
+            const isPrimary = await prompter.ask(QuestionsKeysEnum.IS_PRIMARY) === 'yes';
+            const isGenerated = await prompter.ask(QuestionsKeysEnum.IS_GENERATED) === 'yes';
+            const isUnique = await prompter.ask(QuestionsKeysEnum.IS_UNIQUE) === 'yes';
+            const isNullable = await prompter.ask(QuestionsKeysEnum.IS_NULABLE) === 'yes';
 
-    await saveEntityDefinition(data, entityDefinitionPath);
+            columns.push(<ColumnDetails>{
+                columnName: columnName,
+                type: columnType,
+                isPrimary,
+                isGenerated,
+                isUnique,
+                nullable: isNullable,
+                default: ""
+            });
+        }
+
+        // Ask if the user wants to add another column
+        addAnotherColumn = await prompter.ask(QuestionsKeysEnum.MORE_COLUMNS) === 'yes';
+    }
+
+    const saveToFile = await prompter.ask(QuestionsKeysEnum.SAVE_TO_JSON) === 'yes';
+    if (saveToFile) {
+        const entity: Entity = {
+            entityName: entityName,
+            columns: columns
+        };
+        data.entities.push(entity);
+        await saveEntityDefinition(data, entityDefinitionPath);
+    } else {
+        console.log(JSON.stringify(columns, null, 2));
+    }
 };
+
+
+function isCompleteColumnDetails(column: Partial<ColumnDetails>): column is ColumnDetails {
+    return column.columnName !== undefined && column.type !== undefined;
+    // Ajoutez d'autres vérifications si nécessaire
+}
 
 const appendEntityDefinition = async (): Promise<void> => {
     const prompter = new Prompter();
@@ -58,7 +118,7 @@ const appendEntityDefinition = async (): Promise<void> => {
         const content = fs.readFileSync(entityDefinitionPath, 'utf-8');
         data = JSON.parse(content);
     } else {
-        console.error("Entity definition file does not exist. Consider creating a new entity first.");
+        console.error(ErrorMessagesEnum.ENTITY_DEFINITION_NOT_FOUND);
         return;
     }
 

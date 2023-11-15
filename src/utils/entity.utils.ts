@@ -19,7 +19,7 @@ export function listEntities() {
     // Analyser le contenu pour obtenir un objet JavaScript
     const entitiesData = JSON.parse(rawData);
     // Extraire les noms des entités (entityName)
-    return entitiesData.entities.map((entity: Entity) => entity.entityName);
+    return entitiesData.entities?.map((entity: Entity) => entity.entityName);
 }
 
 

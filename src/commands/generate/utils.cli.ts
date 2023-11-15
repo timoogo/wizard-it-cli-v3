@@ -1,14 +1,15 @@
 import {Prompter} from "../../utils/prompter.utils.js";
 import {ColumnDetails} from "../../utils/Column.details.interface.js";
-import {QuestionsKeysEnum} from "../../resources/en/en.resource.js";
 import {DEFAULT_PROPERTIES} from "../../utils/default.properties.js";
 import fs from "fs";
 import {WIZGEN_ENTITY_DEFINITION_FILE_PATH, WIZGEN_FOLDER} from "../../resources/constants/utils.constant.js";
+import path from "path";
+import { QuestionsKeysEnum } from "../../resources/global/translations.js";
 
 
 export interface EntityDefinition {
     entities: Entity[];
-    version: number;
+    version?: number;
 }
 
 export interface Entity {
@@ -60,10 +61,19 @@ export const getColumnDetails = async (prompter: Prompter): Promise<ColumnDetail
     return columns;
 };
 
-export const saveEntityDefinition = async (data: EntityDefinition, entityDefinitionPath: string): Promise<void> => {
-    const saveToJson = await (new Prompter()).ask(QuestionsKeysEnum.SAVE_TO_JSON) === 'yes';
-    if (saveToJson) {
-        fs.writeFileSync(entityDefinitionPath, JSON.stringify(data, null, 4));
-        console.log("Entity generated:", `${WIZGEN_FOLDER}/${WIZGEN_ENTITY_DEFINITION_FILE_PATH}`);
+export const saveEntityDefinition = async (data: EntityDefinition, filePath: string): Promise<void> => {
+    try {
+        // Ensure directory exists
+        const dir = path.dirname(filePath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+
+        // Save the file
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 4));
+        console.log(`Entity saved successfully at ${filePath}`);
+    } catch (error) {
+        console.error("Failed to save entity definition:", error);
     }
 };
+

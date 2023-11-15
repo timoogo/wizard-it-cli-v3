@@ -1,9 +1,15 @@
 import {Prompter} from "../../utils/prompter.utils.js";
-import {QuestionsKeysEnum} from "../../resources/en/en.resource.js";
 import {loadSchemaFromEntityName} from "../../utils/entity.utils.js";
 import {ALL} from "../../resources/constants/crud.constant.js";
 import {directoryName} from "../../resources/constants/utils.constant.js";
 import fs from "fs";
+import { QuestionsKeysEnum } from "../../resources/global/translations.js";
+/**
+ * Génère un panneau pour une entité spécifique dans une application Next.js
+ * @returns {Promise<void>}
+ * @constructor
+ * @async
+ */
 
 export async function generatePanel() {
     const prompter = new Prompter();
