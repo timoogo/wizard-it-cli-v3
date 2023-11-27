@@ -40,6 +40,7 @@ export const questionKeys = {
     CONFIRM_DELETE_DATABASE: "CONFIRM_DELETE_DATABASE",
     USE_DEFAULT_PROPERTIES: "USE_DEFAULT_PROPERTIES",
     USE_WIZARD_INIT: "USE_WIZARD_INIT",
+    EMPTY_DATABASE: "EMPTY_DATABASE",
 } as const;
 
 export const getQuestions = (): Questions => {
@@ -167,7 +168,7 @@ export const getQuestions = (): Questions => {
             message: translatedQuestions.SELECT_ENTITY,
             type: "list",
             default: "no entity selected",
-            choices: ["no entity selected", ...listEntities()]
+            choices: ["no entity selected"]
         },
         PANEL_NAME: {
             message: translatedQuestions.PANEL_NAME,

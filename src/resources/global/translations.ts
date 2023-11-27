@@ -1,4 +1,5 @@
-import {LanguageCode} from "@/utils/language.utils.js";
+import {LanguageCode} from "../../utils/language.utils.js";
+
 
 type Translations = {
   [key in LanguageCode]: {
@@ -56,7 +57,8 @@ export enum QuestionsKeysEnum {
   DEFAULT_VALUE = "DEFAULT_VALUE",
   CONFIRM_DEFAULT_PROPERTIES = "CONFIRM_DEFAULT_PROPERTIES",
   CONFIRM_DELETE_DATABASE = "CONFIRM_DELETE_DATABASE",
-  USE_WIZARD_INIT = "USE_WIZARD_INIT"
+  USE_WIZARD_INIT = "USE_WIZARD_INIT",
+  EMPTY_DATABASE = "EMPTY_DATABASE",
 }
 
 export enum ErrorMessagesEnum {
@@ -127,7 +129,8 @@ export const translations: Translations = {
       [QuestionsKeysEnum.CONFIRM_DELETE_DATABASE]: "Voulez-vous supprimer la base de données ?",
       [QuestionsKeysEnum.USE_WIZARD_INIT]: "Voulez-vous utiliser le wizard init ?",
       [QuestionsKeysEnum.SELECT_ACTION]: "Quelle action voulez-vous effectuer ?",
-      [QuestionsKeysEnum.USE_DEFAULT_PROPERTIES]: "Voulez-vous utiliser les propriétés par défaut ?"
+      [QuestionsKeysEnum.USE_DEFAULT_PROPERTIES]: "Voulez-vous utiliser les propriétés par défaut ?",
+      [QuestionsKeysEnum.EMPTY_DATABASE]: "Voulez-vous vider les informations de la base de données ?"
     }, errors: {
       [ErrorMessagesEnum.INVALID_DRIVER]: "Le driver est invalide",
       [ErrorMessagesEnum.INVALID_LANGUAGE]: "La langue est invalide",
@@ -193,7 +196,8 @@ export const translations: Translations = {
       CONFIRM_DELETE_DATABASE: "Do you want to delete the database?",
       USE_WIZARD_INIT: "Do you want to use the wizard init?",
       SELECT_ACTION: "What action do you want to perform?",
-      USE_DEFAULT_PROPERTIES: "Do you want to use the default properties?"
+      USE_DEFAULT_PROPERTIES: "Do you want to use the default properties?",
+      EMPTY_DATABASE: "Do you want to empty the database?"
     },
     errors: {
       INVALID_DRIVER: "The driver is invalid",

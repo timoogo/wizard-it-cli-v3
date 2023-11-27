@@ -3,7 +3,7 @@ import path from 'path';
 import { FileManagementKeysEnum} from "../resources/global/translations.js";
 import {
     getSystemLanguage,
-    getTranslation, 
+    getTranslation,
     setLangToSystem,
 } from "../utils/language.utils.js"
 
