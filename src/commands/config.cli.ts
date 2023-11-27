@@ -2,9 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import {WIZGEN_SETTINGS_FILE_PATH, __dirname, directoryName} from "../resources/constants/utils.constant.js";
 import { Prompter} from "../utils/prompter.utils.js";
-import {getCurrentLang, Language, LANGUAGES,} from "../utils/language.utils.js";
+import {getCurrentLang, LanguageCode, LANGUAGES,} from "../utils/language.utils.js";
 
-import { QUESTIONS as EN_QUESTIONS, QUESTIONS } from "../resources/en/en.resource.js";
 
 
 import inquirer from "inquirer";
@@ -50,7 +49,7 @@ const setLanguage = async () => {
  * we need to add a possibility to quit the menu
  **/
 const menu = async () => {
-    let currentLang: Language = getCurrentLang();
+    let currentLang: LanguageCode = getCurrentLang();
     while (true) {
         // if (currentLang === Language.EN) {
         const UIChoices = ["Set Language", "Exit"];

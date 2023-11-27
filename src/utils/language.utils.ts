@@ -1,15 +1,29 @@
+import {
+  ErrorMessagesEnum,
+  FileManagementKeysEnum,
+  QuestionsKeysEnum,
+  translations
+} from "../resources/global/translations.js";
 
-export enum Language {
-  EN = "English (US)",
-  FR = "Français (FR)",
+
+
+// A language enum based on SystemLanguageInfo
+export enum LanguageCode {
+  EN = "en_US",
+  FR = "fr_FR",
 }
+export enum FullLanguageUIName {
+    EN = "English",
+    FR = "Français",
+}
+export type LanguageKeys = keyof typeof LanguageCode;
 
 // Liste de toutes les langues supportées par la CLI dans un tableau
-export const LANGUAGES: Language[] = [Language.EN, Language.FR];
+export const LANGUAGES: LanguageCode[] = [LanguageCode.EN, LanguageCode.FR];
 
 export interface SystemLanguageInfo {
-  fullLanguage: string;
-  langCode: Language;
+  fullLanguage: FullLanguageUIName;
+  langCode: LanguageCode;
 }
 
 export enum Separator {
@@ -18,69 +32,101 @@ export enum Separator {
 }
 
 // Constantes pour les chaînes codées en dur
-const DEFAULT_LOCALE = 'en_US';
-const LOCALE_FR = 'fr_FR';
-const LANG_CODE_FR = 'fr';
+const DEFAULT_LOCALE: LanguageCode = 'en_US' as LanguageCode;
+const LOCALE_FR: LanguageCode = 'fr_FR' as LanguageCode;
 
 export const getSystemLanguage = (): SystemLanguageInfo => {
-  const systemLocale = process.env.LANG || DEFAULT_LOCALE;
-  const [langCode, ] = systemLocale.split(Separator.UNDERSCORE);
-  
-  // Vérifiez si langCode correspond à un des codes de langue définis
-  const fullLanguage = langCode === LANG_CODE_FR ? LOCALE_FR : DEFAULT_LOCALE;
-  const language = langCode === LANG_CODE_FR ? Language.FR : Language.EN;
+  const systemLanguage = process.env.LANG || DEFAULT_LOCALE;
+  const langCode = systemLanguage.includes(LOCALE_FR) ? LanguageCode.FR : LanguageCode.EN;
 
-  return { fullLanguage, langCode: language };
+  // Détermine le nom complet de la langue pour l'interface utilisateur
+  let fullLanguageName: FullLanguageUIName;
+  switch (langCode) {
+    case LanguageCode.EN:
+      fullLanguageName = FullLanguageUIName.EN;
+      break;
+    case LanguageCode.FR:
+      fullLanguageName = FullLanguageUIName.FR;
+      break;
+    default:
+      fullLanguageName = FullLanguageUIName.EN; // Valeur par défaut
+      break;
+  }
+
+  return {
+    fullLanguage: fullLanguageName,
+    langCode,
+  };
 };
+
 
 export type Questions = Record<string, string>;
 export type ErrorMessages = Record<string, string>;
+export type FileManagement = Record<string, string>;
 
-export interface Resources {
-  QUESTIONS: Questions;
-  ERROR_MESSAGES: ErrorMessages;
+interface Resources {
+  [key: string]: Record<string, string>;
+}
+
+interface Resource {
+  [key: string]: string;
 }
 
 // Ici, vous devriez remplir les ressources linguistiques pour chaque langue.
-const LANGUAGE_RESOURCES: Record<Language, Resources> = {
-  [Language.EN]: {
-    QUESTIONS: {},
-    ERROR_MESSAGES: {},
+const LANGUAGE_RESOURCES: Record<LanguageCode, Resources> = {
+  [LanguageCode.EN]: {
+    QUESTIONS: {
+      ...QuestionsKeysEnum, // Intégration des questions
+      // Vos questions en anglais
+    },
+    ERROR_MESSAGES: {
+      ...ErrorMessagesEnum, // Intégration des messages d'erreur
+      // Autres messages d'erreur spécifiques en anglais
+    },
+    FILE_MANAGEMENT: {
+      ...FileManagementKeysEnum, // Intégration des messages de gestion de fichiers
+      // Autres messages de gestion de fichiers spécifiques en anglais
+    },
   },
-  [Language.FR]: {
-    QUESTIONS: {},
-    ERROR_MESSAGES: {},
+  [LanguageCode.FR]: {
+    QUESTIONS: {
+      // Vos questions en français
+    },
+    ERROR_MESSAGES: {
+      ...QuestionsKeysEnum, // Traduisez ces messages en français
+      // Autres messages d'erreur spécifiques en français
+    },
+    FILE_MANAGEMENT: {
+      ...FileManagementKeysEnum, // Traduisez ces messages en français
+      // Autres messages de gestion de fichiers spécifiques en français
+    },
   },
 };
 
-let currentLang: Language = getSystemLanguage().langCode;
+let currentLang: LanguageCode = getSystemLanguage().langCode;
 
-export const getCurrentLang = (): Language => {
+export const getCurrentLang = (): LanguageCode => {
   return currentLang;
 };
 
-export const setCurrentLang = (targetedLang: Language): void => {
+export const setCurrentLang = (targetedLang: LanguageCode): void => {
   currentLang = targetedLang;
 };
 
-export const setLangToSystem = (): void => {
-  currentLang = getSystemLanguage().langCode;
+export const setLangToSystem = () => {
+  console.log(`Setting language to system language: ${getSystemLanguage().langCode}`);
+ return  currentLang = getSystemLanguage().langCode;
 };
 
-export function getTranslation(key: string, resourceType: keyof Resources): string | undefined {
-  const resources = LANGUAGE_RESOURCES[currentLang];
-  const resource = resources[resourceType];
-  return resource[key];
+// Exemple de vérification dans getTranslation
+export function getTranslation(language: LanguageCode, resource: keyof typeof translations[LanguageCode], key: string): string {
+  const resourceTranslations = translations[language][resource] as Record<string, string>;
+  const translation = resourceTranslations[key];
+  if (translation === undefined) {
+    throw new Error(`Translation key not found: ${key} in resource: ${resource} for language: ${language}`);
+  }
+  return translation;
 }
-
-export function getQuestionTranslation(key: string): string {
-  return getTranslation(key, "QUESTIONS") || '';
-}
-
-export function getErrorMessageTranslation(key: string): string {
-  return getTranslation(key, "ERROR_MESSAGES") || '';
-}
-
 export enum StringType {
   CamelCase,
   CapitalizedCase,
@@ -88,21 +134,3 @@ export enum StringType {
   CamelCaseToUnderscores
 }
 
-// function transformString(input: string, type: StringType): string {
-//     switch (type) {
-//         case StringType.CamelCase:
-//             return input.replace(/_([a-z])/g, (g) => g[1]!.toUpperCase());
-
-//         case StringType.CapitalizedCase:
-//             return input.charAt(0).toUpperCase() + input.slice(1);
-
-//         case StringType.SpacesToUnderscores:
-//             return input.replace(/ /g, "_");
-
-//         case StringType.CamelCaseToUnderscores:
-//             return input.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-
-//         default:
-//             return input;
-//     }
-// }

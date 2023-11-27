@@ -1,9 +1,9 @@
 import inquirer, {InputQuestion, Question, Answers, PasswordQuestion} from 'inquirer';
-import { QuestionKeys, QUESTIONS } from '../resources/en/en.resource.js';
 import {ListOrCheckboxQuestion, QuestionType} from './Questions.type.js';
 import * as fs from "fs";
-import { Language } from './language.utils.js';
-
+import { LanguageCode } from './language.utils.js';
+// import questions from global translations
+ import { getQuestions, questionKeys } from '../resources/global/global.js';
 
 interface CustomOptions {
     message?: string;
@@ -14,19 +14,19 @@ interface CustomOptions {
 }
 
 export class Prompter {
-    private language: Language;
+    private language: LanguageCode;
 
-    constructor(language: Language = Language.EN) {
+    constructor(language: LanguageCode = LanguageCode.EN) {
         this.language = language;
         // Directly use QUESTIONS from the imported resource
     }
 
     public async ask(
-        questionKey: QuestionKeys,
+        questionKey: typeof questionKeys[keyof typeof questionKeys],
         options?: CustomOptions | string
     ): Promise<string | undefined | null> {
         try {
-            const questionData = QUESTIONS[String(questionKey)];
+            const questionData = getQuestions()[questionKey];
 
             if (!questionData) {
                 console.warn(`Unknown question key: ${questionKey}`);
@@ -116,11 +116,5 @@ export class Prompter {
      * @returns 
      */
 
-    public async askMultiple(questionKeys: QuestionKeys[]): Promise<Record<string, any>> {
-        const responses: Record<string, any> = {};
-        for (const key of questionKeys) {
-            responses[key] = await this.ask(key);
-        }
-        return responses;
-    }
+
 }

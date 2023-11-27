@@ -1,3 +1,4 @@
+/*
 import inquirer from 'inquirer';
 import  prompt, { Question }  from 'inquirer';
 import { ResourceTypes } from './Questions.type.js';
@@ -20,4 +21,4 @@ export const askQuestion = async <T extends Question>(questionKey: string, confi
 export const getTranslation = (key: string, translationType: ResourceTypes): string => {
     // @ts-ignore
     return translationType === "QUESTIONS" ? QUESTIONS[key] : ERROR_MESSAGES[key];
-};
+};*/

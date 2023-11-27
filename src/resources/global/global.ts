@@ -1,13 +1,54 @@
 import {Questions} from "../../utils/Questions.type.js";
 import {listEntities} from "../../utils/entity.utils.js";
-import {CRUD, ALL} from "../constants/crud.constant.js";
+import {CRUD} from "../constants/crud.constant.js";
 import {Driver} from "../constants/drivers.constant.js";
-import { translations, ILang } from "./translations.js";
-import * as settings from "../../.wizgen/settings.json"
+import {translations} from "./translations.js";
+import {LanguageCode, LanguageKeys} from "../../utils/language.utils.js";
+// List of all languages supported by the CLI is inside LANGUAGES array
+
+
+
+
+export const questionKeys = {
+    DATABASE_NAME: "DATABASE_NAME",
+    SELECT_DRIVER: "SELECT_DRIVER",
+    HOST_NAME: "HOST_NAME",
+    USER_NAME: "USER_NAME",
+    PORT: "PORT",
+    PASSWORD: "PASSWORD",
+    ENTITY_NAME: "ENTITY_NAME",
+    GENERATE_TABLE: "GENERATE_TABLE",
+    TABLE_NAME: "TABLE_NAME",
+    COLUMN_NAME: "COLUMN_NAME",
+    COLUMN_TYPE: "COLUMN_TYPE",
+    IS_PRIMARY: "IS_PRIMARY",
+    IS_GENERATED: "IS_GENERATED",
+    IS_UNIQUE: "IS_UNIQUE",
+    IS_NULABLE: "IS_NULABLE",
+    MORE_COLUMNS: "MORE_COLUMNS",
+    SELECT_LANGUAGE: "SELECT_LANGUAGE",
+    SELECT_ACTION: "SELECT_ACTION",
+    SCHEMA_FORMAT: "SCHEMA_FORMAT",
+    SAVE_TO_ZOD: "SAVE_TO_ZOD",
+    SAVE_TO_JSON: "SAVE_TO_JSON",
+    SELECT_ENTITY: "SELECT_ENTITY",
+    PANEL_NAME: "PANEL_NAME",
+    ENTRY_POINT: "ENTRY_POINT",
+    PAGES_TO_GENERATE: "PAGES_TO_GENERATE",
+    DEFAULT_VALUE: "DEFAULT_VALUE",
+    CONFIRM_DEFAULT_PROPERTIES: "CONFIRM_DEFAULT_PROPERTIES",
+    CONFIRM_DELETE_DATABASE: "CONFIRM_DELETE_DATABASE",
+    USE_DEFAULT_PROPERTIES: "USE_DEFAULT_PROPERTIES",
+    USE_WIZARD_INIT: "USE_WIZARD_INIT",
+} as const;
+
 export const getQuestions = (): Questions => {
-    const lang = settings.default.lang as ILang
-    const translatedQuestions =  translations[lang || 'en'].questions
-    
+    const systemLanguage = process.env.LANG || LanguageCode.EN;
+    const langCode = systemLanguage.includes(LanguageCode.FR) ? LanguageCode.FR : LanguageCode.EN;
+
+    // Accéder directement aux questions traduites pour la langue spécifiée
+    const translatedQuestions = translations[langCode]!.questions;
+
     return {
         DATABASE_NAME: {
             message: translatedQuestions.DATABASE_NAME,
@@ -176,3 +217,5 @@ export const getQuestions = (): Questions => {
         },
     }
 }
+
+

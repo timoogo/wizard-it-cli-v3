@@ -1,5 +1,7 @@
-type ITranslations = {
-  [key in ILang]: {
+import {LanguageCode} from "@/utils/language.utils.js";
+
+type Translations = {
+  [key in LanguageCode]: {
     questions: {
       [key in QuestionsKeysEnum]: string;
     };
@@ -11,8 +13,11 @@ type ITranslations = {
     };
   }
 }
+export type DefinedLanguage = {
+  langCode: LanguageCode;
+  fullLanguage: string;
+}
 
-export type ILang = 'fr' | 'en';
 
 type BaseQuestion = {
   type: string;
@@ -76,23 +81,22 @@ export enum ErrorMessagesEnum {
   // Ajoutez d'autres clés d'erreur au besoin
 }
 
-export enum FileManagementKeysEnum {
-  ALRADY_EXISTS = "ALRADY_EXISTS",
-  CREATED = "CREATED",
-  DIRECTORY_CREATED = "DIRECTORY_CREATED",
-  DIRECTORY_EXISTS = "DIRECTORY_EXISTS",
-  NOT_FOUND = "NOT_FOUND",
-  DELETED = "DELETED",
-  UPDATED = "UPDATED",
-  FILE_CREATED = "FILE_CREATED",
-  FILE_EXISTS = "FILE_EXISTS",
-  FILE_NOT_FOUND = "FILE_NOT_FOUND",
-  FILE_DELETED = "FILE_DELETED",
-  // Ajoutez d'autres clés au besoin
-}
+  export enum FileManagementKeysEnum {
+    ALRADY_EXISTS = "ALRADY_EXISTS",
+    DIRECTORY_CREATED = "DIRECTORY_CREATED",
+    DIRECTORY_EXISTS = "DIRECTORY_EXISTS",
+    NOT_FOUND = "NOT_FOUND",
+    DELETED = "DELETED",
+    UPDATED = "UPDATED",
+    FILE_CREATED = "FILE_CREATED",
+    FILE_EXISTS = "FILE_EXISTS",
+    FILE_NOT_FOUND = "FILE_NOT_FOUND",
+    FILE_DELETED = "FILE_DELETED",
+    // Ajoutez d'autres clés au besoin
+  }
 
-export const translations: ITranslations = {
-  fr: {
+export const translations: Translations = {
+  fr_FR: {
     questions: {
       [QuestionsKeysEnum.DATABASE_NAME]: "Quel est le nom de la base de données ?",
       [QuestionsKeysEnum.SELECT_DRIVER]: "Quel est le driver de la base de données ?",
@@ -146,7 +150,6 @@ export const translations: ITranslations = {
     },
     file_management: {
       [FileManagementKeysEnum.ALRADY_EXISTS]: "Le fichier existe déjà",
-      [FileManagementKeysEnum.CREATED]: "Le fichier a été créé avec succès",
       [FileManagementKeysEnum.DIRECTORY_CREATED]: "Le dossier a été créé avec succès",
       [FileManagementKeysEnum.DIRECTORY_EXISTS]: "Le dossier existe déjà",
       [FileManagementKeysEnum.NOT_FOUND]: "Le fichier n'a pas été trouvé",
@@ -159,7 +162,7 @@ export const translations: ITranslations = {
     }
   },
 
-  en: {
+  en_US: {
     questions: {
       DATABASE_NAME: "What is the name of the database?",
       SELECT_DRIVER: "What is the database driver?",
@@ -214,7 +217,6 @@ export const translations: ITranslations = {
     },
     file_management: {
       ALRADY_EXISTS: "The file already exists",
-      CREATED: "The file has been created successfully",
       DIRECTORY_CREATED: "The directory has been created successfully",
       DIRECTORY_EXISTS: "The directory already exists",
       NOT_FOUND: "The file was not found",
@@ -228,3 +230,4 @@ export const translations: ITranslations = {
   },
 
 }
+

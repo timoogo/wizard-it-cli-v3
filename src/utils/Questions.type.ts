@@ -17,6 +17,6 @@ export type InputQuestion = BaseQuestion & {
 
 export type Question = ListOrCheckboxQuestion | InputQuestion;
 
-export type ResourceTypes = "QUESTIONS" | "ERROR_MESSAGES";
+export type ResourceTypes = "QUESTIONS" | "ERROR_MESSAGES" |"FILE_MANAGEMENT";
 export type Questions = Record<string, Question>;
 export type Resources = Record<ResourceTypes, Questions | Record<string, string>>;
