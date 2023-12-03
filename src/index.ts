@@ -8,6 +8,7 @@ import {configureSettings} from "./commands/config.cli.js";
 import {createEntityDefinition, generateEnv} from "./commands/generate.cli.js";
 import {generatePanel} from "./commands/generate/panel.cli.js";
 import {generateDb} from "./commands/generate/database.cli.js";
+import {generateEntityDefinition, modifyEntityDefinition} from "./commands/generate/utils.cli.js";
 
 
 
@@ -44,13 +45,24 @@ const generate = program
     .description('Generate command with subcommands');
 
 // Sous-commande `entity` pour la commande `generate`
+// generate
+//     .command('entity')
+//     .description('Generate an entity')
+//     .alias('gen:entity')
+//     .option("--append", "Append the entity to the existing ones")
+//     .action(createEntityDefinition);
+
 generate
     .command('entity')
     .description('Generate an entity')
     .alias('gen:entity')
-    .option("--append", "Append the entity to the existing ones")
-    .action(createEntityDefinition);
+//    .option("--append", "Append the entity to the existing ones")
+    .action(generateEntityDefinition);
 
+generate
+    .command('entity:modify')
+    .description('Modify an entity')
+    .action(modifyEntityDefinition); // Pas de paramètre passé à la fonction modifyEntityDefinition
 // Sous-commande `panel` pour la commande `generate`
 generate
     .command('panel')

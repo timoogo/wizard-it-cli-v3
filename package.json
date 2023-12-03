@@ -19,10 +19,13 @@
     "@types/inquirer": "^9.0.3",
     "@types/node": "^20.8.0",
     "@types/pg": "^8.10.5",
+    "@types/pluralize": "^0.0.33",
+    "prisma": "^5.6.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@prisma/client": "^5.6.0",
     "commander": "^11.0.0",
     "inquirer": "^9.2.11",
     "pg": "^8.11.3",

@@ -9,3 +9,25 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model disk {
+  // id autoincrement automatically
+  id       Int    @id @default(autoincrement())
+    // author string not nullable default value John Doe
+  author   String @default("John Doe")
+  // duration string nullable
+  duration String?    @default("00:00:00")
+  // unique example
+  title    String @default("Untitled") @unique
+
+    // relation example
+    tracks   track[]
+
+}
+model track {
+  id     Int    @id @default(autoincrement())
+  title  String
+  diskId Int
+  disk   disk   @relation(fields: [diskId], references: [id])
+}
+
